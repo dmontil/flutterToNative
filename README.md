@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FlutterToNative.pro
 
-## Getting Started
+> The premium migration platform for Flutter developers transitioning to native iOS development.
 
-First, run the development server:
+## 🚀 Live Platform
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**Repository**: [github.com/dmontil/flutterToNative](https://github.com/dmontil/flutterToNative)
+
+## 📋 Features
+
+- **Interactive Widget Map**: Side-by-side Flutter ↔ SwiftUI comparisons
+- **Senior-Level Architecture**: MVVM, Clean Architecture, SPM Modularization
+- **50+ Interview Questions**: Curated iOS interview prep with premium gating
+- **Lead Magnet System**: "Top 10 Performance Pitfalls" PDF download
+- **Premium Gating**: 20% free content model with Supabase authentication
+- **Progress Tracking**: Cloud-synced course progress
+- **Stripe Integration**: Ready for premium subscriptions
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Styling**: Tailwind CSS
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Payments**: Stripe
+- **Deployment**: Vercel
+- **Email**: Loops.so
+
+## 🔧 Environment Variables
+
+Create a `.env.local` file with:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+STRIPE_SECRET_KEY=your_stripe_secret_key
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+LOOPS_API_KEY=your_loops_api_key
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📦 Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚢 Deployment to Vercel
 
-## Learn More
+1. Go to [vercel.com](https://vercel.com)
+2. Click "Add New Project"
+3. Import from GitHub: `dmontil/flutterToNative`
+4. Configure environment variables
+5. Deploy!
 
-To learn more about Next.js, take a look at the following resources:
+## 📊 Content Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Mental Model**: Flutter → Swift mental model transitions
+- **UI Components**: Comparative widget examples
+- **Architecture**: MVVM, Clean Architecture, Coordinator Pattern
+- **Interview Prep**: 50+ questions with premium gating
+- **Feature Dive**: Deep dive into expense tracker implementation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔐 Premium Content Gating
 
-## Deploy on Vercel
+- **Architecture**: Only MVVM free, rest premium
+- **Interview Prep**: First 3 topics free (ARC, Value vs Reference, Concurrency)
+- **Lock Icons**: Visual indicators on premium topics in sidebar
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📈 Marketing Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Lead magnet with Loops.so integration
+- GDPR-compliant consent management
+- Stripe checkout for premium upgrades
+- Progress tracking to drive engagement
+
+## 👨‍💻 Author
+
+Built with ❤️ for Flutter developers making the leap to native iOS.
+
+---
+
+**License**: Proprietary

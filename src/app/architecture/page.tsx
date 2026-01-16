@@ -514,7 +514,7 @@ class LoginViewModelTests: XCTestCase {
                                     </li>
                                     <li className="flex items-start gap-2">
                                         <div className="h-5 w-5 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center text-[10px] shrink-0 mt-0.5">4</div>
-                                        <span><strong>Fast tests are run frequently.</strong> If tests take >10s, developers stop running them.</span>
+                                        <span><strong>Fast tests are run frequently.</strong> If tests take {'>'}10s, developers stop running them.</span>
                                     </li>
                                 </ul>
                             </div>

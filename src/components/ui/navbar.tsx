@@ -6,12 +6,11 @@ import { useState } from "react";
 import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/components/auth/user-provider";
-import { createClient } from "@/lib/supabase-client";
+import { supabase } from "@/lib/supabase-client";
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const { user } = useUser();
-    const supabase = createClient();
 
     const navLinks = [
         { href: "/mental-model", label: "Concepts" },
@@ -21,8 +20,14 @@ export function Navbar() {
     ];
 
     const handleSignOut = async () => {
-        await supabase.auth.signOut();
-        window.location.href = "/";
+        console.log('[Navbar] Signing out...');
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            console.error('[Navbar] Sign out error:', error);
+        } else {
+            console.log('[Navbar] Sign out successful, redirecting...');
+            window.location.href = "/";
+        }
     };
 
     return (

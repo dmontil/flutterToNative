@@ -60,7 +60,17 @@ function ComponentsContent() {
     const topic = COMPONENT_TOPICS.find(t => t.id === currentTopic) || COMPONENT_TOPICS[0];
 
     return (
-        <DocLayout title="UI Components" items={COMPONENT_TOPICS} productId="ios_playbook">
+        <DocLayout
+            title="UI Components"
+            items={COMPONENT_TOPICS}
+            productId="ios_playbook"
+            premiumTopics={[
+                "control-input", "control-switch", "control-slider", "control-picker",
+                "nav-push", "nav-tabs", "nav-modals", "nav-alert",
+                "feedback-progress", "advanced-anim", "advanced-gestures",
+                "advanced-paint", "advanced-platform"
+            ]}
+        >
             <div className="mb-8 border-b border-border pb-6">
                 <h1 className="text-3xl font-bold mb-2 capitalize">{topic.title}</h1>
                 <p className="text-muted-foreground">Flutter ↔ SwiftUI Implementation Guide</p>

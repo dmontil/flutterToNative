@@ -6,10 +6,12 @@
 
 2. **Enable Email Provider**:
    - Click on "Email" in the providers list
-   - Toggle "Enable Email provider" to ON
-   - **Enable Email Confirmations**: OFF (for faster onboarding)
-   - **Enable Magic Link**: ON ✅ (passwordless login)
+   - Toggle "Enable Email provider" to ON ✅
+   - **Email OTP Expiration**: 3600 seconds (default)
    - Click "Save"
+
+   **Nota**: Magic Links están incluidos automáticamente cuando el Email provider está habilitado.
+   No hay toggle separado para Magic Link en la versión actual de Supabase.
 
 3. **Configure Email Templates** (Optional but recommended):
    - Go to Auth → Email Templates

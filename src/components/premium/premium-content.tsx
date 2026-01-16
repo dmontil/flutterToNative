@@ -12,9 +12,9 @@ interface PremiumContentProps {
    */
   isFree?: boolean;
   /**
-   * Cantidad de blur cuando está locked (default: 8)
+   * Cantidad de blur cuando está locked
    */
-  blurAmount?: number;
+  blurAmount?: "sm" | "md" | "lg";
 }
 
 /**
@@ -35,7 +35,7 @@ interface PremiumContentProps {
 export function PremiumContent({
   children,
   isFree = false,
-  blurAmount = 8,
+  blurAmount = "md",
 }: PremiumContentProps) {
   const { isPro } = usePremium();
 

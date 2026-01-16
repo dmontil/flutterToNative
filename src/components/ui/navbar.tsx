@@ -3,11 +3,15 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/components/auth/user-provider";
+import { createClient } from "@/lib/supabase-client";
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const { user } = useUser();
+    const supabase = createClient();
 
     const navLinks = [
         { href: "/mental-model", label: "Concepts" },
@@ -15,6 +19,11 @@ export function Navbar() {
         { href: "/architecture", label: "Architecture" },
         { href: "/interview", label: "Interview Prep" },
     ];
+
+    const handleSignOut = async () => {
+        await supabase.auth.signOut();
+        window.location.href = "/";
+    };
 
     return (
         <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-background/80 backdrop-blur-md">
@@ -38,12 +47,30 @@ export function Navbar() {
 
                 <div className="flex items-center gap-4">
                     <div className="hidden sm:flex items-center gap-4">
-                        <Link href="/login" className="text-sm font-medium hover:text-primary">
-                            Sign In
-                        </Link>
-                        <Link href="#early-access">
-                            <Button variant="default" size="sm" className="font-bold">Join Waitlist</Button>
-                        </Link>
+                        {user ? (
+                            <>
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                    <User className="h-4 w-4" />
+                                    <span>{user.email}</span>
+                                </div>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={handleSignOut}
+                                >
+                                    Sign Out
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login" className="text-sm font-medium hover:text-primary">
+                                    Sign In
+                                </Link>
+                                <Link href="#early-access">
+                                    <Button variant="default" size="sm" className="font-bold">Join Waitlist</Button>
+                                </Link>
+                            </>
+                        )}
                     </div>
 
                     {/* Mobile Toggle */}
@@ -73,12 +100,32 @@ export function Navbar() {
                         </Link>
                     ))}
                     <div className="flex flex-col gap-3 pt-4">
-                        <Link href="/login" onClick={() => setIsOpen(false)} className="text-center py-2 font-medium">
-                            Sign In
-                        </Link>
-                        <Link href="#early-access" onClick={() => setIsOpen(false)}>
-                            <Button className="w-full font-bold">Join Waitlist</Button>
-                        </Link>
+                        {user ? (
+                            <>
+                                <div className="text-center py-2 text-sm text-muted-foreground">
+                                    {user.email}
+                                </div>
+                                <Button
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() => {
+                                        setIsOpen(false);
+                                        handleSignOut();
+                                    }}
+                                >
+                                    Sign Out
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login" onClick={() => setIsOpen(false)} className="text-center py-2 font-medium">
+                                    Sign In
+                                </Link>
+                                <Link href="#early-access" onClick={() => setIsOpen(false)}>
+                                    <Button className="w-full font-bold">Join Waitlist</Button>
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

@@ -8,9 +8,11 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { PremiumLock } from "@/components/ui/premium-lock";
 import { useUser } from "@/components/auth/user-provider";
+import { ArchitectureOverviewContent } from "@/content/architecture-overview";
 
 const ARCHITECTURE_TOPICS = [
-    { title: "The Pattern: MVVM + Clean", id: "arch-pattern" },
+    { title: "Architecture Overview", id: "arch-overview" },
+    { title: "MVVM + Clean Architecture", id: "arch-pattern" },
     { title: "Folder Structure", id: "arch-folder" },
     { title: "Navigation: Coordinator", id: "arch-coordinator" },
     { title: "Modularization (SPM)", id: "arch-modularization" },
@@ -27,7 +29,7 @@ export default function ArchitecturePage() {
 
 function ArchitectureContent() {
     const searchParams = useSearchParams();
-    const currentTopic = searchParams.get("topic") || "arch-pattern";
+    const currentTopic = searchParams.get("topic") || "arch-overview";
     const { hasAccess } = useUser();
     const isPro = hasAccess('ios_premium');
 
@@ -41,6 +43,8 @@ function ArchitectureContent() {
                     Building scalable iOS apps. Flutter patterns vs Senior iOS Architecture.
                 </p>
             </div>
+
+            {currentTopic === "arch-overview" && <ArchitectureOverviewContent />}
 
             {currentTopic === "arch-pattern" && (
                 <section className="mb-20 space-y-12 animate-in fade-in duration-700">

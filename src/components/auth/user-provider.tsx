@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase-client";
 
 interface UserContextType {
     user: { id: string; email?: string } | null;
@@ -19,33 +19,50 @@ const UserContext = createContext<UserContextType>({
 
 export const useUser = () => useContext(UserContext);
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co";
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder";
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export function UserProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
     const [entitlements, setEntitlements] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
     const fetchProfile = async (userId: string) => {
+        console.log('[UserProvider] Fetching profile for user:', userId);
         const { data, error } = await supabase
             .from('profiles')
             .select('entitlements')
             .eq('id', userId)
             .single();
 
-        if (data && !error) {
+        if (error) {
+            console.error('[UserProvider] Error fetching profile:', error);
+            setEntitlements([]);
+        } else if (data) {
+            console.log('[UserProvider] Profile data:', data);
+            console.log('[UserProvider] Entitlements:', data.entitlements);
             setEntitlements(data.entitlements || []);
         } else {
+            console.log('[UserProvider] No profile data found');
             setEntitlements([]);
         }
     };
 
     useEffect(() => {
+        // Check initial session
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            console.log('[UserProvider] Initial session:', session?.user?.email);
+            if (session?.user) {
+                setUser(session.user);
+                fetchProfile(session.user.id);
+            } else {
+                setUser(null);
+                setEntitlements([]);
+            }
+            setIsLoading(false);
+        });
+
+        // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange(
             async (event, session) => {
+                console.log('[UserProvider] Auth state changed:', event, session?.user?.email);
                 if (session?.user) {
                     setUser(session.user);
                     await fetchProfile(session.user.id);

@@ -1,14 +1,20 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Usar service role key si necesitamos saltar RLS para escritura de sistema, 
-// o anon key si confiamos en el RLS que ya configuramos.
-// Por seguridad en Edge Functions o API routes, mejor usar variables de entorno.
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+// Lazy initialization to avoid build-time errors
+function getSupabase() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase credentials are not configured');
+  }
+
+  return createClient(supabaseUrl, supabaseKey);
+}
 
 export async function POST(request: Request) {
+    const supabase = getSupabase();
     try {
         const body = await request.json();
         const { email, source, consent_given, target_product } = body;

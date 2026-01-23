@@ -24,7 +24,26 @@ export default function LoginPage() {
                                     colors: {
                                         brand: '#6366f1',
                                         brandAccent: '#4f46e5',
+                                        inputText: '#ffffff',
+                                        inputPlaceholder: '#94a3b8',
+                                        inputBackground: 'hsl(var(--input))',
+                                        inputBorder: 'hsl(var(--border))',
+                                        inputBorderFocus: '#6366f1',
+                                        inputBorderHover: 'hsl(var(--border))',
                                     }
+                                }
+                            },
+                            style: {
+                                input: {
+                                    color: '#ffffff !important',
+                                    backgroundColor: 'hsl(var(--input)) !important',
+                                    borderColor: 'hsl(var(--border)) !important',
+                                },
+                                label: {
+                                    color: 'hsl(var(--foreground)) !important',
+                                },
+                                message: {
+                                    color: 'hsl(var(--muted-foreground)) !important',
                                 }
                             }
                         }}
@@ -32,7 +51,7 @@ export default function LoginPage() {
                         magicLink={true}
                         view="magic_link"
                         showLinks={false}
-                        redirectTo={typeof window !== 'undefined' ? `${window.location.origin}/` : '/'}
+                        redirectTo={typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : '/auth/callback'}
                         theme="dark"
                         localization={{
                             variables: {

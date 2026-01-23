@@ -6,11 +6,13 @@ import { useState } from "react";
 import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/components/auth/user-provider";
-import { supabase } from "@/lib/supabase-client";
+import { signOut } from "@/lib/supabase-client";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const { user } = useUser();
+    const router = useRouter();
 
     const navLinks = [
         { href: "/mental-model", label: "Concepts" },
@@ -20,12 +22,25 @@ export function Navbar() {
     ];
 
     const handleSignOut = async () => {
-        console.log('[Navbar] Signing out...');
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            console.error('[Navbar] Sign out error:', error);
-        } else {
-            console.log('[Navbar] Sign out successful, redirecting...');
+        console.log('[Navbar] 🚪 Sign out button clicked');
+        console.log('[Navbar] 👤 Current user:', user?.email);
+        
+        try {
+            console.log('[Navbar] 🚀 Starting sign out process...');
+            const result = await signOut();
+            console.log('[Navbar] 📥 Sign out result:', result);
+            
+            // Always force a full page reload for sign out
+            console.log('[Navbar] 🔄 Force reloading page to complete sign out...');
+            window.location.href = "/";
+            
+        } catch (error) {
+            console.error('[Navbar] 💥 Sign out exception:', {
+                name: error?.name,
+                message: error?.message,
+                error
+            });
+            console.log('[Navbar] 🔄 Force reloading despite error...');
             window.location.href = "/";
         }
     };
@@ -113,9 +128,9 @@ export function Navbar() {
                                 <Button
                                     variant="outline"
                                     className="w-full"
-                                    onClick={() => {
+                                    onClick={async () => {
                                         setIsOpen(false);
-                                        handleSignOut();
+                                        await handleSignOut();
                                     }}
                                 >
                                     Sign Out

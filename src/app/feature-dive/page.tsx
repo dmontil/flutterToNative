@@ -7,8 +7,17 @@ import { useUser } from "@/components/auth/user-provider";
 import { ArrowRight, Check, ChevronRight, Code2, Database, Layers, Layout, Server, Settings, CheckCircle2 } from "lucide-react";
 
 export default function FeatureDivePage() {
-    const { hasAccess } = useUser();
+    const { hasAccess, user, entitlements, isLoading } = useUser();
     const isPro = hasAccess('ios_premium');
+    
+    console.log('[FeatureDivePage] 🔍 Current state:', {
+        hasUser: !!user,
+        userEmail: user?.email,
+        entitlements,
+        isLoading,
+        isPro,
+        hasAccessResult: hasAccess('ios_premium')
+    });
 
     return (
         <div className="min-h-screen bg-background">
@@ -239,7 +248,7 @@ class AddExpenseViewModel: ObservableObject {
                 </section>
 
                 {/* Step 4: Data Layer - Repository */}
-                <PremiumLock isUnlocked={isPro}>
+                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
                     <section className="mb-20">
                         <div className="flex items-center gap-4 mb-6">
                             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-500 font-bold text-white">4</span>

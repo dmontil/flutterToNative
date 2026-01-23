@@ -28,8 +28,18 @@ export default function ArchitecturePage() {
 function ArchitectureContent() {
     const searchParams = useSearchParams();
     const currentTopic = searchParams.get("topic") || "arch-pattern";
-    const { hasAccess } = useUser();
+    const { hasAccess, user, entitlements, isLoading } = useUser();
     const isPro = hasAccess('ios_premium');
+    
+    console.log('[ArchitecturePage] 🔍 Current state:', {
+        hasUser: !!user,
+        userEmail: user?.email,
+        entitlements,
+        isLoading,
+        isPro,
+        hasAccessResult: hasAccess('ios_premium'),
+        currentTopic
+    });
 
     const topic = ARCHITECTURE_TOPICS.find(t => t.id === currentTopic) || ARCHITECTURE_TOPICS[0];
 
@@ -161,7 +171,7 @@ function ArchitectureContent() {
                 </section>
             )}
 
-            <PremiumLock isUnlocked={isPro}>
+            <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
                 {currentTopic === "arch-folder" && (
                     <section className="mb-20 space-y-16">
                         <div className="prose prose-invert max-w-none">
@@ -376,7 +386,7 @@ function ArchitectureContent() {
                                     <div className="p-6 bg-black/20 rounded-xl border border-white/10">
                                         <h4 className="font-bold text-green-400 mb-3">✅ When to Feature-First</h4>
                                         <ul className="space-y-2 text-sm text-muted-foreground">
-                                            <li>• Team size > 5 developers</li>
+                                            <li>• Team size &gt; 5 developers</li>
                                             <li>• Multiple release trains</li>
                                             <li>• Features can be toggled off</li>
                                             <li>• Clear product ownership</li>
@@ -408,7 +418,7 @@ function ArchitectureContent() {
                                     <div className="p-6 bg-black/20 rounded-xl border border-white/10">
                                         <h4 className="font-bold text-purple-400 mb-3">📊 KPIs to Track</h4>
                                         <ul className="space-y-2 text-sm text-muted-foreground">
-                                            <li>• Build time < 2min (incremental)</li>
+                                            <li>• Build time &lt; 2min (incremental)</li>
                                             <li>• Module coupling score</li>
                                             <li>• Test coverage per layer</li>
                                             <li>• Dependency graph depth</li>
@@ -913,19 +923,19 @@ class ShoppingCoordinatorTests: XCTestCase {
                                         <div className="space-y-3 text-sm text-muted-foreground">
                                             <div className="flex justify-between">
                                                 <span>Navigation depth</span>
-                                                <span className="text-white">< 5 levels</span>
+                                                <span className="text-white">&lt; 5 levels</span>
                                             </div>
                                             <div className="flex justify-between">
                                                 <span>Coordinator count</span>
-                                                <span className="text-white">< 15 active</span>
+                                                <span className="text-white">&lt; 15 active</span>
                                             </div>
                                             <div className="flex justify-between">
                                                 <span>Memory per coordinator</span>
-                                                <span className="text-white">< 1MB</span>
+                                                <span className="text-white">&lt; 1MB</span>
                                             </div>
                                             <div className="flex justify-between">
                                                 <span>Navigation response time</span>
-                                                <span className="text-white">< 100ms</span>
+                                                <span className="text-white">&lt; 100ms</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1206,7 +1216,7 @@ let package = Package(
                                             <div className="text-sm space-y-2">
                                                 <p className="text-white font-medium">When to use:</p>
                                                 <ul className="space-y-1 text-muted-foreground">
-                                                    <li>• Team size < 8 developers</li>
+                                                    <li>• Team size &lt; 8 developers</li>
                                                     <li>• Heavy infrastructure/platform focus</li>
                                                     <li>• Shared components are core value</li>
                                                     <li>• Technical teams (DevOps, Platform)</li>
@@ -1256,7 +1266,7 @@ let package = Package(
                                             <div className="text-sm space-y-2">
                                                 <p className="text-white font-medium">When to use:</p>
                                                 <ul className="space-y-1 text-muted-foreground">
-                                                    <li>• Team size > 8 developers</li>
+                                                    <li>• Team size &gt; 8 developers</li>
                                                     <li>• Product-focused organization</li>
                                                     <li>• Multiple release trains</li>
                                                     <li>• Feature teams with PMs</li>
@@ -1309,11 +1319,11 @@ let package = Package(
                                             <div className="space-y-3 text-sm">
                                                 <div className="flex justify-between">
                                                     <span className="text-muted-foreground">Clean build time</span>
-                                                    <span className="text-white">< 3 minutes</span>
+                                                    <span className="text-white">&lt; 3 minutes</span>
                                                 </div>
                                                 <div className="flex justify-between">
                                                     <span className="text-muted-foreground">Incremental build</span>
-                                                    <span className="text-green-400">< 30 seconds</span>
+                                                    <span className="text-green-400">&lt; 30 seconds</span>
                                                 </div>
                                                 <div className="flex justify-between">
                                                     <span className="text-muted-foreground">Module count</span>
@@ -1321,11 +1331,11 @@ let package = Package(
                                                 </div>
                                                 <div className="flex justify-between">
                                                     <span className="text-muted-foreground">Dependency depth</span>
-                                                    <span className="text-white">< 4 levels</span>
+                                                    <span className="text-white">&lt; 4 levels</span>
                                                 </div>
                                                 <div className="flex justify-between">
                                                     <span className="text-muted-foreground">Test execution</span>
-                                                    <span className="text-green-400">< 2 minutes</span>
+                                                    <span className="text-green-400">&lt; 2 minutes</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -1562,7 +1572,7 @@ class ShoppingIntegrationTests: XCTestCase {
                                     <div className="space-y-3 text-sm text-muted-foreground">
                                         <p className="text-white font-medium">Best for:</p>
                                         <ul className="space-y-1">
-                                            <li>• Teams < 15 developers</li>
+                                            <li>• Teams &lt; 15 developers</li>
                                             <li>• Monolithic or few modules</li>
                                             <li>• High type safety requirements</li>
                                             <li>• Performance-critical applications</li>
@@ -1580,7 +1590,7 @@ class ShoppingIntegrationTests: XCTestCase {
                                     <div className="space-y-3 text-sm text-muted-foreground">
                                         <p className="text-white font-medium">Best for:</p>
                                         <ul className="space-y-1">
-                                            <li>• Teams > 15 developers</li>
+                                            <li>• Teams &gt; 15 developers</li>
                                             <li>• Many feature modules</li>
                                             <li>• Dynamic configuration needs</li>
                                             <li>• A/B testing infrastructure</li>
@@ -1963,7 +1973,7 @@ class DIPerformanceTests: XCTestCase {
             }
         }
         
-        // Should complete in < 0.01 seconds for 1000 resolutions
+        // Should complete in &lt; 0.01 seconds for 1000 resolutions
     }
 }`}
                                             </pre>
@@ -2035,11 +2045,11 @@ class DIPerformanceTests: XCTestCase {
                                             </div>
                                             <div className="flex justify-between">
                                                 <span className="text-muted-foreground">App startup impact</span>
-                                                <span className="text-green-400">< 50ms</span>
+                                                <span className="text-green-400">&lt; 50ms</span>
                                             </div>
                                             <div className="flex justify-between">
                                                 <span className="text-muted-foreground">Memory overhead</span>
-                                                <span className="text-green-400">< 1MB</span>
+                                                <span className="text-green-400">&lt; 1MB</span>
                                             </div>
                                         </div>
                                     </div>
@@ -2050,9 +2060,9 @@ class DIPerformanceTests: XCTestCase {
                                             <li>• <strong>Start simple:</strong> Pure DI until complexity demands containers</li>
                                             <li>• <strong>Modular boundaries:</strong> Each module owns its dependencies</li>
                                             <li>• <strong>Environment abstraction:</strong> Separate concerns from DI</li>
-                                            <li>• <strong>Compile-time safety:</strong> Protocols > runtime resolution</li>
+                                            <li>• <strong>Compile-time safety:</strong> Protocols &gt; runtime resolution</li>
                                             <li>• <strong>Performance monitoring:</strong> Track resolution times</li>
-                                            <li>• <strong>Testing strategy:</strong> Injectable mocks > global state</li>
+                                            <li>• <strong>Testing strategy:</strong> Injectable mocks &gt; global state</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -2114,11 +2124,11 @@ class DIPerformanceTests: XCTestCase {
                                         <div className="space-y-3 text-sm text-muted-foreground">
                                             <div>
                                                 <span className="text-white">Build time impact:</span>
-                                                <span className="text-green-400 ml-2">< 5%</span>
+                                                <span className="text-green-400 ml-2">&lt; 5%</span>
                                             </div>
                                             <div>
                                                 <span className="text-white">Test setup time:</span>
-                                                <span className="text-green-400 ml-2">< 100ms</span>
+                                                <span className="text-green-400 ml-2">&lt; 100ms</span>
                                             </div>
                                             <div>
                                                 <span className="text-white">New feature velocity:</span>

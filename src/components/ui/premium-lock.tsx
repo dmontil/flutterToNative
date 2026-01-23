@@ -12,9 +12,17 @@ interface PremiumLockProps {
 }
 
 export function PremiumLock({ isUnlocked, children, blurAmount = "md" }: PremiumLockProps) {
+    console.log('[PremiumLock] 🔐 Lock state:', {
+        isUnlocked,
+        shouldShowLock: !isUnlocked
+    });
+    
     if (isUnlocked) {
+        console.log('[PremiumLock] ✅ Content unlocked, rendering children');
         return <>{children}</>;
     }
+    
+    console.log('[PremiumLock] 🔒 Content locked, rendering lock overlay');
 
     return (
         <div className="relative group">

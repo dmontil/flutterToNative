@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp"
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx --yes @microsoft/playwright-mcp",
+      "args": [],
+      "env": {}
+    }
+  }
+}

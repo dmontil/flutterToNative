@@ -39,6 +39,7 @@ export const metadata: Metadata = {
 };
 
 import { UserProvider } from "@/components/auth/user-provider";
+import "@/lib/env-validation";
 
 export default function RootLayout({
   children,

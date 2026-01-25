@@ -11,7 +11,7 @@
 - **Interactive Widget Map**: Side-by-side Flutter ↔ SwiftUI comparisons
 - **Senior-Level Architecture**: MVVM, Clean Architecture, SPM Modularization
 - **50+ Interview Questions**: Curated iOS interview prep with premium gating
-- **Lead Magnet System**: "Top 10 Performance Pitfalls" PDF download
+- **Premium Content**: Advanced iOS development guides
 - **Premium Gating**: 20% free content model with Supabase authentication
 - **Progress Tracking**: Cloud-synced course progress
 - **Stripe Integration**: Ready for premium subscriptions
@@ -24,7 +24,6 @@
 - **Authentication**: Supabase Auth
 - **Payments**: Stripe
 - **Deployment**: Vercel
-- **Email**: Loops.so
 
 ## 🔧 Environment Variables
 
@@ -35,7 +34,6 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 STRIPE_SECRET_KEY=your_stripe_secret_key
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-LOOPS_API_KEY=your_loops_api_key
 ```
 
 ## 📦 Installation

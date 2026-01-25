@@ -237,8 +237,7 @@ STRIPE_WEBHOOK_SECRET=whsec_... (se obtiene en paso 6)
 # Site URL (⚠️ ACTUALIZAR DESPUÉS DEL DEPLOY)
 NEXT_PUBLIC_SITE_URL=https://your-project.vercel.app
 
-# Loops (OPCIONAL)
-LOOPS_API_KEY=tu_loops_key
+# Email service removed - simple MVP
 ```
 
 ### 5.2 Deploy a Vercel

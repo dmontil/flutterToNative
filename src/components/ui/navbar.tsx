@@ -86,8 +86,8 @@ export function Navbar() {
                                 <Link href="/login" className="text-sm font-medium hover:text-primary">
                                     Sign In
                                 </Link>
-                                <Link href="#early-access">
-                                    <Button variant="default" size="sm" className="font-bold">Join Waitlist</Button>
+                                <Link href="/premium">
+                                    <Button variant="default" size="sm" className="font-bold">Get Premium</Button>
                                 </Link>
                             </>
                         )}
@@ -141,8 +141,8 @@ export function Navbar() {
                                 <Link href="/login" onClick={() => setIsOpen(false)} className="text-center py-2 font-medium">
                                     Sign In
                                 </Link>
-                                <Link href="#early-access" onClick={() => setIsOpen(false)}>
-                                    <Button className="w-full font-bold">Join Waitlist</Button>
+                                <Link href="/premium" onClick={() => setIsOpen(false)}>
+                                    <Button className="w-full font-bold">Get Premium</Button>
                                 </Link>
                             </>
                         )}

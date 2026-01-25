@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OG Image Generator - Flutter to iOS Playbook</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
+        }
+        
+        .og-container {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: 0;
+        }
+        
+        .og-content {
+            padding: 80px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .og-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at top right, rgba(99, 102, 241, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom left, rgba(168, 85, 247, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+        }
+        
+        .og-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 2px, transparent 2px),
+                radial-gradient(circle at 75% 75%, rgba(99, 102, 241, 0.1) 2px, transparent 2px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+        }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 25px;
+            padding: 8px 20px;
+            margin-bottom: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #4f46e5;
+            width: fit-content;
+        }
+        
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #6366f1;
+            border-radius: 50%;
+            margin-right: 12px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .main-title {
+            font-size: 84px;
+            font-weight: 800;
+            line-height: 0.9;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+        
+        .title-line-1 {
+            color: #09090b;
+            margin-bottom: 10px;
+        }
+        
+        .title-line-2 {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 36px;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 40px;
+            max-width: 800px;
+        }
+        
+        .price-tag {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .tech-icons {
+            position: absolute;
+            top: 80px;
+            right: 80px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .tech-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .flutter-icon {
+            background: linear-gradient(135deg, #02569B 0%, #0277BD 100%);
+        }
+        
+        .ios-icon {
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+        }
+        
+        .arrow {
+            font-size: 32px;
+            color: #6366f1;
+        }
+        
+        .decorative-elements {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 400px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%);
+            border-radius: 300px 0 0 0;
+        }
+        
+        .code-snippet {
+            position: absolute;
+            bottom: 60px;
+            right: 60px;
+            background: rgba(248, 250, 252, 0.9);
+            border: 1px solid rgba(226, 232, 240, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            font-size: 14px;
+            color: #334155;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="og-container" id="ogImage">
+        <div class="og-background"></div>
+        <div class="og-pattern"></div>
+        
+        <div class="tech-icons">
+            <div class="tech-icon flutter-icon">F</div>
+            <div class="arrow">→</div>
+            <div class="tech-icon ios-icon">🍎</div>
+        </div>
+        
+        <div class="og-content">
+            <div class="badge">
+                <div class="pulse-dot"></div>
+                The Missing Manual for Flutter Engineers
+            </div>
+            
+            <h1 class="main-title">
+                <div class="title-line-1">Flutter to iOS</div>
+                <div class="title-line-2">Playbook</div>
+            </h1>
+            
+            <p class="subtitle">
+                From Senior Flutter to Senior iOS Native
+            </p>
+            
+            <div class="price-tag">
+                Premium Developer Guide • $49
+            </div>
+        </div>
+        
+        <div class="decorative-elements"></div>
+        
+        <div class="code-snippet">
+            <div>// Flutter Widget</div>
+            <div style="color: #6366f1;">Widget build(context)</div>
+            <div style="margin: 8px 0;">↓</div>
+            <div>// SwiftUI View</div>
+            <div style="color: #6366f1;">var body: some View</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 40px; text-align: center;">
+        <button onclick="downloadImage()" style="
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        ">
+            Download as PNG
+        </button>
+    </div>
+
+    <script>
+        async function downloadImage() {
+            const element = document.getElementById('ogImage');
+            
+            try {
+                // Import html2canvas dynamically
+                const html2canvas = await import('https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.esm.js');
+                
+                const canvas = await html2canvas.default(element, {
+                    width: 1200,
+                    height: 630,
+                    scale: 2, // For high quality
+                    useCORS: true,
+                    allowTaint: true
+                });
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.download = 'og-image.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (error) {
+                alert('Please install html2canvas or use browser developer tools to capture the image');
+                console.error('Error generating image:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -21,7 +21,6 @@
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    STRIPE_SECRET_KEY=sk_live_... or sk_test_...
    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_... or pk_test_...
-   LOOPS_API_KEY=your_loops_api_key
    ```
 
 5. **Deploy**: Click "Deploy" and wait ~2 minutes
@@ -31,7 +30,7 @@
 - [ ] Verify homepage loads at `your-project.vercel.app`
 - [ ] Test login/signup flow
 - [ ] Verify premium content is gated correctly
-- [ ] Test lead magnet download
+- [ ] Test premium content access
 - [ ] Check Stripe checkout flow (test mode)
 - [ ] Verify progress tracking works
 
@@ -46,7 +45,6 @@
 
 Make sure to use **production** keys for:
 - Stripe: `sk_live_...` and `pk_live_...`
-- Loops: Production API key
 - Supabase: Production project URL and anon key
 
 ## Troubleshooting

@@ -1,0 +1,96 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "Flutter ToNative .pro" [ref=e5] [cursor=pointer]:
+          - /url: /
+          - text: Flutter
+          - generic [ref=e6]: ToNative
+          - text: .pro
+        - generic [ref=e7]:
+          - link "Concepts" [ref=e8] [cursor=pointer]:
+            - /url: /mental-model
+          - link "UI Lab" [ref=e9] [cursor=pointer]:
+            - /url: /components-ui
+          - link "Architecture" [ref=e10] [cursor=pointer]:
+            - /url: /architecture
+          - link "Interview Prep" [ref=e11] [cursor=pointer]:
+            - /url: /interview
+        - generic [ref=e13]:
+          - link "Sign In" [ref=e14] [cursor=pointer]:
+            - /url: /login
+          - link "Get Premium" [ref=e15] [cursor=pointer]:
+            - /url: /premium
+            - button "Get Premium" [ref=e16]
+    - main [ref=e17]:
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - text: Limited Time Launch Offer
+          - heading "Stop Guessing. Start Coding iOS Native." [level=1] [ref=e20]:
+            - text: Stop Guessing.
+            - text: Start Coding iOS Native.
+          - paragraph [ref=e21]: The average Senior iOS salary is $150k+. Use your existing Flutter knowledge to bridge the gap in weeks, not months.
+        - generic [ref=e24]:
+          - heading "The Complete Playbook" [level=3] [ref=e25]
+          - generic [ref=e26]:
+            - generic [ref=e27]: $49
+            - generic [ref=e28]: $99
+          - paragraph [ref=e29]: One-time payment. Lifetime access.
+          - list [ref=e30]:
+            - listitem [ref=e31]:
+              - img [ref=e32]
+              - generic [ref=e34]: Unlock all 50+ Senior Interview Questions
+            - listitem [ref=e35]:
+              - img [ref=e36]
+              - generic [ref=e38]: Access Advanced Architecture Deep Dives
+            - listitem [ref=e39]:
+              - img [ref=e40]
+              - generic [ref=e42]: Full Source Code for 'Add Expense' Feature
+            - listitem [ref=e43]:
+              - img [ref=e44]
+              - generic [ref=e46]: System Design & Soft Skills Guides
+            - listitem [ref=e47]:
+              - img [ref=e48]
+              - generic [ref=e50]: Free Updates for Future Content
+          - generic [ref=e51]:
+            - button "Get Instant Access" [ref=e52]
+            - paragraph [ref=e53]:
+              - img [ref=e54]
+              - text: 30-Day Money-Back Guarantee
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - heading "50+" [level=4] [ref=e59]
+            - paragraph [ref=e60]: Interview Questions
+          - generic [ref=e61]:
+            - heading "100%" [level=4] [ref=e62]
+            - paragraph [ref=e63]: Swift & UIKit Coverage
+          - generic [ref=e64]:
+            - heading "24/7" [level=4] [ref=e65]
+            - paragraph [ref=e66]: Lifetime Access
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - heading "Frequently Asked Questions" [level=2] [ref=e71]
+          - paragraph [ref=e72]: Everything you need to know before joining 500+ senior developers.
+        - generic [ref=e73]:
+          - button "¿El contenido está actualizado para Swift 6 y SwiftUI 5?" [ref=e75]:
+            - generic [ref=e76]: ¿El contenido está actualizado para Swift 6 y SwiftUI 5?
+            - img [ref=e77]
+          - button "¿Necesito experiencia previa en iOS o Swift?" [ref=e80]:
+            - generic [ref=e81]: ¿Necesito experiencia previa en iOS o Swift?
+            - img [ref=e82]
+          - button "¿Qué recibo exactamente con mi compra?" [ref=e85]:
+            - generic [ref=e86]: ¿Qué recibo exactamente con mi compra?
+            - img [ref=e87]
+          - button "¿Hay alguna garantía si no me gusta?" [ref=e90]:
+            - generic [ref=e91]: ¿Hay alguna garantía si no me gusta?
+            - img [ref=e92]
+          - button "¿Es un pago único o suscripción?" [ref=e95]:
+            - generic [ref=e96]: ¿Es un pago único o suscripción?
+            - img [ref=e97]
+  - button "Open Next.js Dev Tools" [ref=e104] [cursor=pointer]:
+    - img [ref=e105]
+  - alert [ref=e108]
+```

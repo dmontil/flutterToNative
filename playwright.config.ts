@@ -2,13 +2,13 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: 'html',
   use: {
-    baseURL: 'https://www.fluttertonative.pro',
+    baseURL: 'http://localhost:3002',
     trace: 'on-first-retry',
   },
 
@@ -20,8 +20,8 @@ export default defineConfig({
   ],
 
   webServer: process.env.CI ? undefined : {
-    command: 'npm run dev',
-    url: 'http://127.0.0.1:3000',
+    command: 'PORT=3002 npm run dev',
+    url: 'http://localhost:3002',
     reuseExistingServer: !process.env.CI,
   },
 });

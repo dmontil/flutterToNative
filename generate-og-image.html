@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OG Image Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f3f4f6;
+        }
+
+        #og-image {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .background-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+        }
+
+        .content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 80px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .flutter-icon, .ios-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .arrow {
+            font-size: 40px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        h1 {
+            font-size: 72px;
+            font-weight: 800;
+            margin: 0;
+            line-height: 1;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 36px;
+            font-weight: 600;
+            margin: 0;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .price-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 24px;
+            font-weight: 700;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .instructions {
+            margin-top: 40px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            color: #333;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .download-btn {
+            background: #6366f1;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .download-btn:hover {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <div id="og-image">
+        <div class="background-pattern"></div>
+        <div class="content">
+            <div class="logo-section">
+                <div class="flutter-icon">🦋</div>
+                <div class="arrow">→</div>
+                <div class="ios-icon">📱</div>
+            </div>
+            
+            <h1>Flutter to iOS<br>Playbook</h1>
+            <div class="subtitle">From Senior Flutter to Senior iOS Native</div>
+            <div class="price-badge">$49 Premium Guide</div>
+        </div>
+    </div>
+
+    <div class="instructions">
+        <h2>How to save as og-image.png:</h2>
+        <ol>
+            <li>Right-click on the image above</li>
+            <li>Select "Inspect Element" or "Inspect"</li>
+            <li>In DevTools, right-click on the div with id="og-image"</li>
+            <li>Select "Capture node screenshot"</li>
+            <li>Save as "og-image.png" in your /public folder</li>
+        </ol>
+        <p><strong>Alternative:</strong> Take a screenshot of just the image area above (1200x630px)</p>
+        <button class="download-btn" onclick="downloadImage()">Generate PNG</button>
+    </div>
+
+    <script>
+        function downloadImage() {
+            // Create a temporary canvas to draw the image
+            const element = document.getElementById('og-image');
+            
+            // Use html2canvas if available, otherwise provide instructions
+            if (typeof html2canvas !== 'undefined') {
+                html2canvas(element, {
+                    width: 1200,
+                    height: 630,
+                    scale: 1
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'og-image.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+            } else {
+                alert('Please follow the manual instructions above to capture the image.');
+            }
+        }
+
+        // Load html2canvas if not already loaded
+        if (typeof html2canvas === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+            document.head.appendChild(script);
+        }
+    </script>
+</body>
+</html>

@@ -32,32 +32,6 @@ export interface Database {
           updated_at?: string
         }
       }
-      lead_captures: {
-        Row: {
-          id: string
-          email: string
-          source: string
-          consent_given: boolean
-          target_product: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          email: string
-          source: string
-          consent_given: boolean
-          target_product?: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          email?: string
-          source?: string
-          consent_given?: boolean
-          target_product?: string
-          created_at?: string
-        }
-      }
     }
     Views: {
       [_ in never]: never

@@ -1,0 +1,101 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Main gradient background -->
+    <radialGradient id="mainGradient" cx="0.5" cy="0.3" r="0.8">
+      <stop offset="0%" stop-color="#4f46e5" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#09090b" stop-opacity="0.05"/>
+    </radialGradient>
+    
+    <!-- Primary indigo gradient for accents -->
+    <linearGradient id="indigoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#4f46e5"/>
+    </linearGradient>
+    
+    <!-- Text gradient -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#09090b"/>
+      <stop offset="100%" stop-color="#52525b"/>
+    </linearGradient>
+    
+    <!-- Subtle pattern for background -->
+    <pattern id="dotPattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+      <circle cx="20" cy="20" r="1" fill="#6366f1" fill-opacity="0.1"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect width="1200" height="630" fill="url(#mainGradient)"/>
+  <rect width="1200" height="630" fill="url(#dotPattern)"/>
+
+  <!-- Flutter Logo/Icon (simplified) -->
+  <g transform="translate(100, 120)">
+    <rect x="0" y="0" width="50" height="50" rx="12" fill="#02569B" fill-opacity="0.1" stroke="#02569B" stroke-width="2"/>
+    <polygon points="25,15 35,25 25,35 15,25" fill="#02569B"/>
+  </g>
+
+  <!-- Arrow -->
+  <g transform="translate(200, 135)">
+    <path d="M0 10 L30 10 M20 0 L30 10 L20 20" stroke="url(#indigoGradient)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- iOS/Apple Logo/Icon (simplified) -->
+  <g transform="translate(280, 120)">
+    <rect x="0" y="0" width="50" height="50" rx="12" fill="#000000" fill-opacity="0.05" stroke="#000000" stroke-width="2"/>
+    <circle cx="25" cy="18" r="4" fill="none" stroke="#000000" stroke-width="2"/>
+    <path d="M25 22 Q25 28 22 32 Q20 35 25 35 Q30 35 28 32 Q25 28 25 22" fill="#000000"/>
+  </g>
+
+  <!-- Main Title -->
+  <text x="100" y="260" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="68" font-weight="800" fill="url(#textGradient)" letter-spacing="-0.02em">
+    Flutter to iOS
+  </text>
+  
+  <text x="100" y="340" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="68" font-weight="800" fill="url(#indigoGradient)" letter-spacing="-0.02em">
+    Playbook
+  </text>
+
+  <!-- Subtitle -->
+  <text x="100" y="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="32" font-weight="500" fill="#71717a">
+    From Senior Flutter to Senior iOS Native
+  </text>
+
+  <!-- Professional badge -->
+  <g transform="translate(100, 460)">
+    <rect width="200" height="40" rx="20" fill="url(#indigoGradient)" fill-opacity="0.1" stroke="url(#indigoGradient)" stroke-width="1"/>
+    <circle cx="30" cy="20" r="4" fill="#6366f1"/>
+    <text x="45" y="26" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="600" fill="#6366f1">
+      Premium Guide - $49
+    </text>
+  </g>
+
+  <!-- Right side decoration - code blocks visual -->
+  <g transform="translate(700, 100)">
+    <!-- Code window mockup -->
+    <rect width="400" height="280" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    
+    <!-- Window header -->
+    <rect width="400" height="40" rx="12" fill="#f1f5f9"/>
+    <rect y="40" width="400" height="240" fill="#f8fafc"/>
+    
+    <!-- Window dots -->
+    <circle cx="20" cy="20" r="4" fill="#ef4444"/>
+    <circle cx="40" cy="20" r="4" fill="#f59e0b"/>
+    <circle cx="60" cy="20" r="4" fill="#10b981"/>
+    
+    <!-- Code lines -->
+    <rect x="30" y="70" width="120" height="8" rx="4" fill="#6366f1" fill-opacity="0.3"/>
+    <rect x="30" y="90" width="180" height="8" rx="4" fill="#e2e8f0"/>
+    <rect x="30" y="110" width="90" height="8" rx="4" fill="#e2e8f0"/>
+    <rect x="30" y="140" width="160" height="8" rx="4" fill="#6366f1" fill-opacity="0.3"/>
+    <rect x="30" y="160" width="100" height="8" rx="4" fill="#e2e8f0"/>
+    <rect x="30" y="180" width="140" height="8" rx="4" fill="#e2e8f0"/>
+    <rect x="30" y="210" width="80" height="8" rx="4" fill="#6366f1" fill-opacity="0.3"/>
+    <rect x="30" y="230" width="120" height="8" rx="4" fill="#e2e8f0"/>
+    <rect x="30" y="250" width="160" height="8" rx="4" fill="#e2e8f0"/>
+  </g>
+
+  <!-- Bottom accent line -->
+  <rect x="0" y="600" width="1200" height="30" fill="url(#indigoGradient)" fill-opacity="0.1"/>
+</svg>

@@ -152,7 +152,7 @@ export default function WidgetMapPage() {
                             This is just 1% of the knowledge required to become a Senior iOS Engineer. Unlock the professional playbook.
                         </p>
                         <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700" asChild>
-                            <a href="/#early-access">Join Waitlist & Get Full Access</a>
+                            <a href="/premium">Get Premium Access</a>
                         </Button>
                     </div>
                 </div>

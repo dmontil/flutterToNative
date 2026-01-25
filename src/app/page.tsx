@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Navbar } from "@/components/ui/navbar";
-import { LeadMagnet } from "@/components/ui/lead-magnet";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Code2, Layers, Zap, BookOpen, Smartphone, Cpu } from "lucide-react";
 import { FAQSection } from "@/components/ui/faq-section";
@@ -30,17 +29,15 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="#early-access">
+            <Link href="/premium">
               <Button size="lg" className="h-12 px-8 text-base group">
-                Join Beta & Waitlist
+                Access Premium Content
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
-
-      <LeadMagnet />
 
       {/* Feature Grid / Value Props */}
       <section className="py-24 bg-secondary/30">

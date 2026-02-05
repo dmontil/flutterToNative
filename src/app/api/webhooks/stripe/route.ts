@@ -75,15 +75,9 @@ export async function POST(req: Request) {
         );
       }
 
-      // Determine which entitlement to grant based on the price_id
-      const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
-      const priceId = lineItems.data[0]?.price?.id;
-
-      let entitlement = 'ios_premium'; // Default
-
-      if (priceId === process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ANDROID) {
-        entitlement = 'android_premium';
-      }
+      // Determine which entitlement to grant based on metadata (preferred)
+      const productId = metadata?.productId || 'ios_playbook';
+      const entitlement = productId === 'android_playbook' ? 'android_premium' : 'ios_premium';
 
       // Update user profile with entitlement
       const { data: existingProfile, error: fetchError } = await supabase

@@ -1,11 +1,10 @@
 "use client";
 
 import { DocLayout } from "@/components/layout/doc-layout";
-import { Folder, FileCode, TestTube, Layers, ArrowRight, Zap, Shield } from "lucide-react";
+import { Folder, FileCode, Layers, ArrowRight, Zap, Shield } from "lucide-react";
 import { CodeComparison } from "@/components/ui/code-comparison";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import Link from "next/link";
 import { PremiumLock } from "@/components/ui/premium-lock";
 import { useUser } from "@/components/auth/user-provider";
 
@@ -15,6 +14,9 @@ const ARCHITECTURE_TOPICS = [
     { title: "Navigation: Coordinator", id: "arch-coordinator" },
     { title: "Modularization (SPM)", id: "arch-modularization" },
     { title: "Advanced DI", id: "arch-di" },
+    { title: "War Stories & Failure Modes", id: "arch-war-stories" },
+    { title: "Scaling Checklist", id: "arch-checklist" },
+    { title: "Data Flow & Offline", id: "arch-data" },
 ];
 
 export default function ArchitecturePage() {
@@ -44,7 +46,7 @@ function ArchitectureContent() {
     const topic = ARCHITECTURE_TOPICS.find(t => t.id === currentTopic) || ARCHITECTURE_TOPICS[0];
 
     return (
-        <DocLayout title="Architecture Hub" items={ARCHITECTURE_TOPICS} premiumTopics={["arch-folder", "arch-coordinator", "arch-modularization", "arch-di"]}>
+        <DocLayout title="Architecture Hub" items={ARCHITECTURE_TOPICS} premiumTopics={["arch-folder", "arch-coordinator", "arch-modularization", "arch-di", "arch-war-stories", "arch-checklist", "arch-data"]}>
             <div className="mb-12">
                 <h1 className="text-4xl font-bold tracking-tight mb-4">{topic.title}</h1>
                 <p className="text-xl text-muted-foreground">
@@ -2153,6 +2155,44 @@ class DIPerformanceTests: XCTestCase {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </section>
+                )}
+
+                {currentTopic === "arch-war-stories" && (
+                    <section className="mb-20 space-y-10">
+                        <h2 className="text-2xl font-bold">War Stories & Failure Modes</h2>
+                        <div className="bg-card border border-border p-6 rounded-xl space-y-4 text-muted-foreground">
+                            <p><strong>ViewModel bloat:</strong> VMs become god objects. Fix by splitting into feature + sub-VMs or use cases.</p>
+                            <p><strong>Coordinator spaghetti:</strong> Coordinators owning business logic. Keep them only for navigation.</p>
+                            <p><strong>Global state leaks:</strong> Environment objects used as globals. Prefer scoped dependencies per feature.</p>
+                            <p><strong>SwiftUI performance traps:</strong> Expensive computed properties in <code>body</code>. Move to VM or memoize.</p>
+                        </div>
+                    </section>
+                )}
+
+                {currentTopic === "arch-checklist" && (
+                    <section className="mb-20 space-y-8">
+                        <h2 className="text-2xl font-bold">Scaling Checklist (Senior Level)</h2>
+                        <ul className="list-disc ml-6 text-muted-foreground space-y-2">
+                            <li>ViewModels are immutable UI state sources; no logic in views.</li>
+                            <li>Navigation owns routes only, never data transformations.</li>
+                            <li>Domain layer is pure Swift (no UIKit/SwiftUI imports).</li>
+                            <li>Dependencies injected via protocols, not singletons.</li>
+                            <li>Modules compile independently with public APIs.</li>
+                            <li>Analytics, logging, and error tracking are centralized.</li>
+                        </ul>
+                    </section>
+                )}
+
+                {currentTopic === "arch-data" && (
+                    <section className="mb-20 space-y-8">
+                        <h2 className="text-2xl font-bold">Data Flow & Offline Strategy</h2>
+                        <div className="bg-card border border-border p-6 rounded-xl text-muted-foreground space-y-4">
+                            <p><strong>Single Source of Truth:</strong> Local persistence (CoreData/GRDB) is the truth; UI observes it.</p>
+                            <p><strong>Sync policy:</strong> Repo fetches from API, writes to DB, DB pushes to UI via Combine.</p>
+                            <p><strong>Conflict resolution:</strong> Use versioning or timestamps per model.</p>
+                            <p><strong>Backpressure:</strong> Debounce writes and batch sync for network efficiency.</p>
                         </div>
                     </section>
                 )}

@@ -51,7 +51,10 @@ async function simulateFreeUser(page: Page) {
       user: mockUser,
       entitlements: [], // Sin entitlements
       isLoading: false,
-      hasAccess: (entitlement: string) => false // No acceso a nada premium
+      hasAccess: (_entitlement: string) => {
+        void _entitlement;
+        return false;
+      } // No acceso a nada premium
     };
   });
 }
@@ -64,7 +67,10 @@ async function simulateLoggedOutUser(page: Page) {
       user: null,
       entitlements: [],
       isLoading: false,
-      hasAccess: (entitlement: string) => false
+      hasAccess: (_entitlement: string) => {
+        void _entitlement;
+        return false;
+      }
     };
   });
 }

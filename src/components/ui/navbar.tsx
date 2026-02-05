@@ -7,18 +7,26 @@ import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/components/auth/user-provider";
 import { signOut } from "@/lib/supabase-client";
-import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const { user } = useUser();
-    const router = useRouter();
+    const pathname = usePathname();
+    const isAndroid = pathname?.startsWith("/android");
+    const isSelector = pathname === "/";
+    const base = isAndroid ? "/android" : "";
+    const isLocal = typeof window !== "undefined" && (
+        window.location.host.includes("localhost") || window.location.host.includes("127.0.0.1")
+    );
+    const iosHref = isLocal ? "/ios" : "https://ios.fluttertonative.pro";
+    const androidHref = isLocal ? "/android" : "https://android.fluttertonative.pro";
 
-    const navLinks = [
-        { href: "/mental-model", label: "Concepts" },
-        { href: "/components-ui", label: "UI Lab" },
-        { href: "/architecture", label: "Architecture" },
-        { href: "/interview", label: "Interview Prep" },
+    const navLinks = isSelector ? [] : [
+        { href: `${base}/mental-model`, label: "Concepts" },
+        { href: `${base}/components-ui`, label: "UI Lab" },
+        { href: `${base}/architecture`, label: "Architecture" },
+        { href: `${base}/interview`, label: "Interview Prep" },
     ];
 
     const handleSignOut = async () => {
@@ -54,6 +62,26 @@ export function Navbar() {
 
                 {/* Desktop Nav */}
                 <div className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground">
+                    <div className="flex items-center gap-2 rounded-full bg-muted/30 border border-border/60 px-2 py-1">
+                        <a
+                            href={iosHref}
+                            className={cn(
+                                "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-colors",
+                                !isAndroid && !isSelector ? "bg-indigo-500 text-white" : "text-muted-foreground hover:text-foreground"
+                            )}
+                        >
+                            iOS
+                        </a>
+                        <a
+                            href={androidHref}
+                            className={cn(
+                                "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-colors",
+                                isAndroid ? "bg-green-500 text-white" : "text-muted-foreground hover:text-foreground"
+                            )}
+                        >
+                            Android
+                        </a>
+                    </div>
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}
@@ -109,6 +137,28 @@ export function Navbar() {
                 isOpen ? "scale-y-100 opacity-100" : "scale-y-0 opacity-0 pointer-events-none"
             )}>
                 <div className="flex flex-col p-6 gap-4">
+                    <div className="flex items-center gap-2">
+                        <a
+                            href={iosHref}
+                            className={cn(
+                                "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-colors border border-border/60",
+                                !isAndroid && !isSelector ? "bg-indigo-500 text-white" : "text-muted-foreground hover:text-foreground"
+                            )}
+                            onClick={() => setIsOpen(false)}
+                        >
+                            iOS
+                        </a>
+                        <a
+                            href={androidHref}
+                            className={cn(
+                                "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-colors border border-border/60",
+                                isAndroid ? "bg-green-500 text-white" : "text-muted-foreground hover:text-foreground"
+                            )}
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Android
+                        </a>
+                    </div>
                     {navLinks.map((link) => (
                         <Link
                             key={link.href}

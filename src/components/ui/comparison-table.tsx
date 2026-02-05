@@ -10,9 +10,11 @@ interface ComparisonTableProps {
     title: string;
     rows: ComparisonRow[];
     className?: string;
+    rightLabel?: string;
+    rightColorClass?: string;
 }
 
-export function ComparisonTable({ title, rows, className }: ComparisonTableProps) {
+export function ComparisonTable({ title, rows, className, rightLabel = "iOS (Swift/SwiftUI)", rightColorClass = "text-sky-500" }: ComparisonTableProps) {
     return (
         <div className={cn("rounded-lg border border-border overflow-hidden bg-card text-card-foreground shadow-sm", className)}>
             <div className="bg-muted px-6 py-4 border-b border-border">
@@ -20,7 +22,7 @@ export function ComparisonTable({ title, rows, className }: ComparisonTableProps
             </div>
             <div className="grid grid-cols-[1fr_1fr] md:grid-cols-[1fr_1fr_1.5fr] text-sm md:text-base font-medium bg-muted/50 border-b border-border">
                 <div className="p-4 text-indigo-500">Flutter</div>
-                <div className="p-4 text-sky-500">iOS (Swift/SwiftUI)</div>
+                <div className={`p-4 ${rightColorClass}`}>{rightLabel}</div>
                 <div className="hidden md:block p-4 text-muted-foreground">Key Differences</div>
             </div>
             <div className="divide-y divide-border">

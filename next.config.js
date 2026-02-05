@@ -1,8 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true
-  }
+  turbopack: {
+    resolveAlias: {
+      root: __dirname,
+    },
+    root: __dirname,
+  },
 };
 
 module.exports = nextConfig;

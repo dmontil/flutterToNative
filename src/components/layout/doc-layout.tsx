@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/ui/navbar";
-import { useState, useEffect } from "react";
-import { CheckCircle2, Circle, Menu, X, ArrowRight, Trophy, Lock } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { CheckCircle2, Menu, X, ArrowRight, Trophy, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/components/auth/user-provider";
 import { supabase } from "@/lib/supabase-client";
 import { DocPromotion } from "@/components/ui/doc-promotion";
+import { PRODUCTS } from "@/config/products";
 
 interface DocItem {
     title: string;
@@ -31,50 +32,17 @@ export function DocLayout({ title, items, children, productId = 'ios_playbook', 
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const { user, hasAccess, isLoading } = useUser();
-    const isPro = hasAccess('ios_premium');
+    const entitlement = PRODUCTS[productId]?.entitlement || "ios_premium";
+    const isPro = hasAccess(entitlement);
     const [completedLessons, setCompletedLessons] = useState<string[]>([]);
-    const [isSyncing, setIsSyncing] = useState(false);
 
-    // Load progress: Initial local load + Remote sync
-    useEffect(() => {
-        // 1. Load from localStorage immediately for speed
-        try {
-            const saved = localStorage.getItem("course_progress");
-            if (saved) {
-                setCompletedLessons(JSON.parse(saved));
-            }
-        } catch (e) {
-            console.error("Failed to parse local course progress", e);
-        }
-
-        // 2. If logged in, fetch from Supabase and merge
-        if (user) {
-            syncRemoteProgress();
-        }
-    }, [user]);
-
-    // Clear completed lessons when user logs out
-    useEffect(() => {
-        // If user becomes null (logout), clear local progress
-        if (user === null) {
-            console.log('[DocLayout] 🧹 User logged out, clearing local progress');
-            setCompletedLessons([]);
-            try {
-                localStorage.removeItem("course_progress");
-                console.log('[DocLayout] ✅ Local progress cleared');
-            } catch (e) {
-                console.error('[DocLayout] ❌ Failed to clear local progress', e);
-            }
-        }
-    }, [user]);
-
-    const syncRemoteProgress = async () => {
-        setIsSyncing(true);
+    const syncRemoteProgress = useCallback(async () => {
         try {
             const { data, error } = await supabase
                 .from('user_progress')
                 .select('lesson_id')
-                .eq('product_id', productId);
+                .eq('product_id', productId)
+                .eq('user_id', user.id);
 
             if (data && !error) {
                 const remoteIds = data.map(rp => rp.lesson_id);
@@ -94,17 +62,50 @@ export function DocLayout({ title, items, children, productId = 'ios_playbook', 
                 if (toPush.length > 0) {
                     const inserts = toPush.map((lesson_id: string) => ({
                         user_id: user?.id,
-                        lesson_id
+                        lesson_id,
+                        product_id: productId
                     }));
                     await supabase.from('user_progress').insert(inserts);
                 }
             }
         } catch (e) {
             console.error("Sync error:", e);
-        } finally {
-            setIsSyncing(false);
         }
-    };
+    }, [productId, user]);
+
+    // Load progress: Initial local load + Remote sync
+    useEffect(() => {
+        // 1. Load from localStorage immediately for speed
+        try {
+            const saved = localStorage.getItem("course_progress");
+            if (saved) {
+                setCompletedLessons(JSON.parse(saved));
+            }
+        } catch (e) {
+            console.error("Failed to parse local course progress", e);
+        }
+
+        // 2. If logged in, fetch from Supabase and merge
+        if (user) {
+            syncRemoteProgress();
+        }
+    }, [user, syncRemoteProgress]);
+
+    // Clear completed lessons when user logs out
+    useEffect(() => {
+        // If user becomes null (logout), clear local progress
+        if (user === null) {
+            console.log('[DocLayout] 🧹 User logged out, clearing local progress');
+            setCompletedLessons([]);
+            try {
+                localStorage.removeItem("course_progress");
+                console.log('[DocLayout] ✅ Local progress cleared');
+            } catch (e) {
+                console.error('[DocLayout] ❌ Failed to clear local progress', e);
+            }
+        }
+    }, [user]);
+
 
     const markComplete = async (id: string) => {
         if (!completedLessons.includes(id)) {
@@ -153,7 +154,6 @@ export function DocLayout({ title, items, children, productId = 'ios_playbook', 
     // Find Next Lesson Title for button
     const currentIndex = items.findIndex(i => i.id === currentTopicId);
     const isLastLesson = currentIndex === items.length - 1;
-    const nextLessonTitle = !isLastLesson ? items[currentIndex + 1].title : "Finish Course";
 
     // Close mobile menu when topic changes
     useEffect(() => {
@@ -258,7 +258,7 @@ export function DocLayout({ title, items, children, productId = 'ios_playbook', 
                             </div>
 
                             {/* Sales Conversion: Only show if NOT pro or not logged in (logic can be refined later) */}
-                            <DocPromotion />
+                            <DocPromotion variant={productId === "android_playbook" ? "android" : "ios"} />
                         </div>
                     </div>
                 </main>

@@ -44,7 +44,7 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
       } else {
         setEntitlements([]);
       }
-    } catch (error) {
+    } catch {
       setEntitlements([]);
     }
   };

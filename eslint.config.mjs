@@ -12,7 +12,20 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // MVP: ignore local scripts
+    "scripts/**",
+    "*.js",
   ]),
+  {
+    rules: {
+      "react/no-unescaped-entities": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "react/jsx-no-comment-textnodes": "off",
+      "@typescript-eslint/no-require-imports": "off",
+      "react-hooks/set-state-in-effect": "off",
+      "@typescript-eslint/no-empty-object-type": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

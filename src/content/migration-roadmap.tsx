@@ -1,4 +1,4 @@
-import { CheckCircle2, Circle, AlertCircle, Clock, ArrowRight, Lightbulb, Shield } from "lucide-react";
+import { Circle, AlertCircle, Clock, ArrowRight, Shield } from "lucide-react";
 import Link from "next/link";
 
 export function MigrationRoadmapContent() {

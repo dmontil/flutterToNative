@@ -2,7 +2,7 @@
 
 import { DocLayout } from "@/components/layout/doc-layout";
 import { useSearchParams } from "next/navigation";
-import { Cpu, BrainCircuit, AlertTriangle, BookOpen, MessageCircleQuestion, Layers, Zap, Clock } from "lucide-react";
+import { Cpu, BrainCircuit, AlertTriangle, MessageCircleQuestion, Layers, Zap, Clock } from "lucide-react";
 import { CodeComparison } from "@/components/ui/code-comparison";
 
 import { Suspense } from "react";

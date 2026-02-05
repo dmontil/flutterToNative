@@ -4,7 +4,7 @@ import { Navbar } from "@/components/ui/navbar";
 import { CodeComparison } from "@/components/ui/code-comparison";
 import { PremiumLock } from "@/components/ui/premium-lock";
 import { useUser } from "@/components/auth/user-provider";
-import { ArrowRight, Check, ChevronRight, Code2, Database, Layers, Layout, Server, Settings, CheckCircle2 } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 
 export default function FeatureDivePage() {
     const { hasAccess, user, entitlements, isLoading } = useUser();

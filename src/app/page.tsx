@@ -1,182 +1,223 @@
-import Link from "next/link";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Code2, Layers, Zap, BookOpen, Smartphone, Cpu } from "lucide-react";
-import { FAQSection } from "@/components/ui/faq-section";
+import { ArrowRight, Cpu, Smartphone, Layers, Zap, ShieldCheck } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/20 via-background to-background" />
+      <section className="relative pt-32 pb-24 md:pt-44 md:pb-32 overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-500/10 via-background to-background" />
 
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-6">
-            <span className="flex h-2 w-2 rounded-full bg-indigo-500 mr-2 animate-pulse"></span>
-            The Missing Manual for Flutter Engineers
+            Flutter → Native. Senior Track.
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-            From Senior Flutter <br className="hidden md:block" />
-            to <span className="text-indigo-500">Senior iOS Native</span>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+            Become Native <br className="hidden md:block" />
+            Without Starting Over
           </h1>
 
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Stop translating code line-by-line. Master the <strong>Apple ecosystem</strong>, understand <strong>UIKit & SwiftUI</strong> architecture, and crush your next iOS interview.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+            The premium playbooks built for senior Flutter engineers. Deep architecture, real-world tradeoffs,
+            and interview-grade knowledge for iOS and Android.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/premium">
-              <Button size="lg" className="h-12 px-8 text-base group">
-                Access Premium Content
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
+          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <TrackCard
+              href="/ios"
+              title="iOS Playbook"
+              description="SwiftUI, UIKit, ARC, and senior iOS architecture. Built for production engineers."
+              accent="indigo"
+              icon={<Cpu className="h-6 w-6 text-indigo-500" />}
+            />
+            <TrackCard
+              href="/android"
+              title="Android Playbook"
+              description="Kotlin, Compose, coroutines, and Android architecture. Built for senior-level impact."
+              accent="green"
+              icon={<Smartphone className="h-6 w-6 text-green-500" />}
+            />
           </div>
         </div>
       </section>
 
-      {/* Feature Grid / Value Props */}
-      <section className="py-24 bg-secondary/30">
+      <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight mb-4">Why this playbook?</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Most iOS tutorials treat you like a junior dev. We respect your experience and focus on the actual high-leverage transition from Flutter to Native.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={<Zap className="h-6 w-6 text-indigo-500" />}
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <ValueCard
+              icon={<Zap className="h-5 w-5 text-indigo-500" />}
               title="Mental Model Mapping"
-              description="Direct comparisons: Widgets to Views, Cubit to ViewModels, and Isolates to Structured Concurrency."
+              description="Go from Flutter to native by mapping core concepts, not rewriting everything."
             />
-            <FeatureCard
-              icon={<Layers className="h-6 w-6 text-indigo-500" />}
-              title="Professional Architecture"
-              description="Learn how Clean Architecture applies to iOS. Dependency Injection, Coordinators, and Modularization."
+            <ValueCard
+              icon={<Layers className="h-5 w-5 text-green-500" />}
+              title="Architecture You Can Ship"
+              description="Clean Architecture, modularization, data flow, and scaling checklists."
             />
-            <FeatureCard
-              icon={<Code2 className="h-6 w-6 text-indigo-500" />}
-              title="Interview Gold"
-              description="Component lifecycle, memory management (ARC), and the tough questions senior interviewers ask."
+            <ValueCard
+              icon={<ArrowRight className="h-5 w-5 text-purple-500" />}
+              title="Interview-Ready"
+              description="Senior-level questions and answers that sound like real experience."
             />
           </div>
         </div>
       </section>
 
-      {/* Social Proof / Testimonials */}
-      <section className="py-24 bg-background">
+      <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Loved by Senior Engineers</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-stretch">
+            <PricingTeaser
+              title="iOS Playbook"
+              price="$49"
+              compare="$99"
+              description="SwiftUI + UIKit + ARC + Senior Architecture"
+              href="/pricing#ios"
+              accent="indigo"
+            />
+            <PricingTeaser
+              title="Android Playbook"
+              price="$49"
+              compare="$99"
+              description="Kotlin + Compose + Coroutines + Senior Architecture"
+              href="/pricing#android"
+              accent="green"
+            />
+          </div>
+          <div className="mt-6 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+            <ShieldCheck className="h-3.5 w-3.5" />
+            30‑Day Money‑Back Guarantee
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 bg-secondary/30">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">Engineers love the clarity</h2>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <TestimonialCard
-              quote="Finally, a guide that respects my experience. Didn't waste time explaining variables, went straight to memory management & architecture."
+              quote="Finally, content that skips the basics and goes straight to architecture decisions."
               author="Alex M."
-              role="Senior Flutter Dev @ TechCorp"
+              role="Senior Flutter Dev"
             />
             <TestimonialCard
-              quote="The mental model mapping made everything click. I ported our main app feature to SwiftUI in a weekend after reading this."
-              author="Sarah K."
-              role="Lead Mobile Engineer"
+              quote="The Kotlin/Compose mapping was the missing piece for my Android transition."
+              author="Priya S."
+              role="Mobile Lead"
             />
             <TestimonialCard
-              quote="Worth every penny. The interview questions section helped me pass the iOS Native screen at a FAANG company."
+              quote="The interview prep feels like a real senior engineer wrote it."
               author="David R."
-              role="Ex-Flutter, now iOS Eng"
+              role="iOS Engineer"
             />
           </div>
         </div>
       </section>
 
-      {/* Roadmap Teaser */}
-      <section className="py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Your Roadmap to Native Swift</h2>
-
-            <div className="space-y-8">
-              <RoadmapItem
-                step="01"
-                title="The Shift"
-                description="Understanding the fundamental differences in rendering and lifecycle."
-              />
-              <RoadmapItem
-                step="02"
-                title="SwiftUI & UIKit"
-                description="Why you still need UIKit and how to mix them effectively."
-              />
-              <RoadmapItem
-                step="03"
-                title="State Management"
-                description="Moving from BLoC/Cubit to ObservableObject and @State."
-              />
-              <RoadmapItem
-                step="04"
-                title="Production App"
-                description="Building a real Expense Tracker with offline support and complex navigation."
-              />
-            </div>
+      <section className="py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Pick your native track</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+            Start with the platform you want to master. Add the other later if you want the full bundle.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button className="bg-indigo-600 hover:bg-indigo-700" asChild>
+              <a href="/ios">Go to iOS Playbook</a>
+            </Button>
+            <Button className="bg-green-600 hover:bg-green-700" asChild>
+              <a href="/android">Go to Android Playbook</a>
+            </Button>
           </div>
         </div>
       </section>
 
-      <FAQSection />
-
-      {/* Footer */}
-      <footer className="py-12 border-t border-border">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="font-bold text-lg">
-            FlutterToNative.pro
+      <footer className="py-10 border-t border-border">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="font-bold text-lg">FlutterToNative.pro</div>
+          <div className="text-xs text-muted-foreground">
+            © 2026 Native Education. Built for engineers.
           </div>
-          <p className="text-muted-foreground text-sm">
-            © 2026 Native Education. Built for Engineers.
-          </p>
         </div>
       </footer>
     </div >
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+const ACCENTS = {
+  indigo: {
+    border: "border-indigo-500/20",
+    iconBg: "bg-indigo-500/10",
+    button: "bg-indigo-600 hover:bg-indigo-700",
+  },
+  green: {
+    border: "border-green-500/20",
+    iconBg: "bg-green-500/10",
+    button: "bg-green-600 hover:bg-green-700",
+  },
+};
+
+function TrackCard({ href, title, description, accent, icon }: { href: string, title: string, description: string, accent: "indigo" | "green", icon: React.ReactNode }) {
+  const styles = ACCENTS[accent];
   return (
-    <div className="p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-md transition-shadow">
-      <div className="h-12 w-12 rounded-lg bg-secondary flex items-center justify-center mb-4">
+    <a
+      href={href}
+      className={`group rounded-2xl border ${styles.border} bg-card p-8 text-left shadow-sm hover:shadow-md transition-shadow`}
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`h-10 w-10 rounded-lg ${styles.iconBg} flex items-center justify-center`}>
+          {icon}
+        </div>
+        <h3 className="text-2xl font-bold">{title}</h3>
+      </div>
+      <p className="text-muted-foreground mb-6">{description}</p>
+      <Button className={styles.button}>
+        Enter {title} <ArrowRight className="ml-2 h-4 w-4" />
+      </Button>
+    </a>
+  );
+}
+
+function ValueCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+  return (
+    <div className="p-6 rounded-2xl bg-card border border-border shadow-sm">
+      <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center mb-4">
         {icon}
       </div>
-      <h3 className="font-bold text-xl mb-2">{title}</h3>
+      <h3 className="font-bold text-lg mb-2">{title}</h3>
       <p className="text-muted-foreground">{description}</p>
     </div>
   );
 }
 
-function RoadmapItem({ step, title, description }: { step: string, title: string, description: string }) {
+function PricingTeaser({ title, price, compare, description, href, accent }: { title: string, price: string, compare: string, description: string, href: string, accent: "indigo" | "green" }) {
+  const styles = ACCENTS[accent];
   return (
-    <div className="flex gap-6 items-start group">
-      <div className="flex-shrink-0 w-12 h-12 rounded-full border border-indigo-500/30 flex items-center justify-center text-indigo-500 font-bold bg-indigo-500/5 group-hover:bg-indigo-500/10 transition-colors">
-        {step}
+    <a href={href} className={`rounded-2xl border ${styles.border} bg-card p-8 shadow-sm hover:shadow-md transition-shadow`}>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-xl font-bold">{title}</h3>
+        <span className="text-xs uppercase tracking-wider text-muted-foreground">One‑time</span>
       </div>
-      <div className="pt-2">
-        <h3 className="text-lg font-bold mb-1 group-hover:text-indigo-500 transition-colors">{title}</h3>
-        <p className="text-muted-foreground">{description}</p>
+      <div className="flex items-baseline gap-2 mb-3">
+        <span className="text-4xl font-bold">{price}</span>
+        <span className="text-sm text-muted-foreground line-through">{compare}</span>
       </div>
-    </div>
+      <p className="text-muted-foreground mb-6">{description}</p>
+      <Button className={styles.button}>
+        View Pricing <ArrowRight className="ml-2 h-4 w-4" />
+      </Button>
+    </a>
   );
 }
 
 function TestimonialCard({ quote, author, role }: { quote: string, author: string, role: string }) {
   return (
-    <div className="p-6 rounded-2xl bg-secondary/20 border border-border">
-      <div className="flex flex-col h-full justify-between">
-        <p className="text-lg italic text-muted-foreground mb-6">"{quote}"</p>
-        <div>
-          <p className="font-bold">{author}</p>
-          <p className="text-sm text-muted-foreground">{role}</p>
-        </div>
+    <div className="p-6 rounded-2xl bg-card border border-border">
+      <p className="text-muted-foreground italic mb-6">"{quote}"</p>
+      <div>
+        <div className="font-bold">{author}</div>
+        <div className="text-xs text-muted-foreground">{role}</div>
       </div>
     </div>
   );

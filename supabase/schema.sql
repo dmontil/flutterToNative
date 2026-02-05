@@ -20,9 +20,18 @@ create policy "Users can view own profile"
 on public.profiles for select 
 using ( auth.uid() = id );
 
-create policy "Users can update own profile" 
+create policy "Users can update own profile (non-privileged fields only)" 
 on public.profiles for update 
-using ( auth.uid() = id );
+using ( auth.uid() = id )
+with check (
+  auth.uid() = id
+  and entitlements = (
+    select p.entitlements from public.profiles p where p.id = auth.uid()
+  )
+  and stripe_customer_id is not distinct from (
+    select p.stripe_customer_id from public.profiles p where p.id = auth.uid()
+  )
+);
 
 -- Function to handle new user signup
 create or replace function public.handle_new_user() 

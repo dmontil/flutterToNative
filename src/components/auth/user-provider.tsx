@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase-client";
 
 interface UserContextType {
@@ -25,22 +25,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const [isLoading, setIsLoading] = useState(true);
     const [profileFetchedFor, setProfileFetchedFor] = useState<string | null>(null);
 
-    const fetchProfile = async (userId: string, retryCount = 0) => {
+    const fetchProfile = useCallback(async function fetchProfile(userId: string, retryCount = 0) {
         console.log('[UserProvider] 📋 Starting profile fetch for user:', userId, retryCount > 0 ? `(retry ${retryCount})` : '');
         
         // Prevent duplicate fetches for the same user
         if (profileFetchedFor === userId && retryCount === 0) {
             console.log('[UserProvider] ⏭️ Profile already fetched for this user, skipping');
             return;
-        }
-        
-        // Fast path: Apply known entitlements immediately for verified user
-        if (userId === '48847f19-0543-464a-a027-0185db0b9e3b' && retryCount === 0) {
-            console.log('[UserProvider] ⚡ Fast path: Applying known entitlements immediately for verified user');
-            setEntitlements(['ios_premium']);
-            setProfileFetchedFor(userId);
-            console.log('[UserProvider] ✅ Entitlements applied instantly: ["ios_premium"]');
-            return; // No background fetch needed, we know the entitlements
         }
         
         try {
@@ -125,22 +116,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
                 return;
             }
             
-            // Last resort: try direct database lookup with known entitlements
-            console.log('[UserProvider] 🆘 All retries failed, trying fallback approach...');
-            
-            // If this is the specific user we know has entitlements, set them manually
-            if (userId === '48847f19-0543-464a-a027-0185db0b9e3b') {
-                console.log('[UserProvider] ✅ Applying known entitlements for verified user');
-                setEntitlements(['ios_premium']);
-                return;
-            }
-            
             console.log('[UserProvider] 🔄 Setting entitlements to empty array due to exception');
             setEntitlements([]);
         }
         
         console.log('[UserProvider] ✅ Profile fetch complete');
-    };
+    }, [profileFetchedFor]);
 
     useEffect(() => {
         console.log('[UserProvider] 🏁 UserProvider useEffect starting...');
@@ -416,7 +397,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             subscription.unsubscribe();
             console.log('[UserProvider] ✅ UserProvider cleanup complete');
         };
-    }, []);
+    }, [fetchProfile]);
 
     console.log('[UserProvider] 🎯 UserProvider render - Current state:', {
         hasUser: !!user,

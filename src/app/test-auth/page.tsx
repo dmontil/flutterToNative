@@ -1,9 +1,43 @@
 "use client";
 
 import { useUser } from "@/components/auth/user-provider";
+import { supabase } from "@/lib/supabase-client";
+import { useState } from "react";
 
 export default function TestAuthPage() {
     const { user, isLoading, entitlements } = useUser();
+    const [grantStatus, setGrantStatus] = useState<string>("");
+    const testModeEnabled = process.env.NEXT_PUBLIC_PREMIUM_TEST_MODE === "true";
+
+    const grantPremium = async () => {
+        setGrantStatus("Granting premium...");
+        try {
+            const { data, error } = await supabase.auth.getSession();
+            if (error || !data?.session?.access_token) {
+                setGrantStatus("No session found. Please log in first.");
+                return;
+            }
+
+            const res = await fetch("/api/debug/grant-premium", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${data.session.access_token}`
+                },
+                body: JSON.stringify({ productId: "ios_playbook" })
+            });
+
+            if (!res.ok) {
+                setGrantStatus(`Failed: ${res.status}`);
+                return;
+            }
+
+            setGrantStatus("✅ Premium granted. Refreshing...");
+            setTimeout(() => window.location.reload(), 800);
+        } catch (e: any) {
+            setGrantStatus(`Error: ${e?.message || "unknown"}`);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-background p-8">
@@ -59,6 +93,24 @@ export default function TestAuthPage() {
                             }
                         </p>
                     </div>
+
+                    {testModeEnabled && (
+                        <div className="p-4 border rounded-lg bg-amber-50">
+                            <h2 className="font-semibold mb-2">Premium Test Mode</h2>
+                            <p className="text-sm text-muted-foreground mb-3">
+                                This is only enabled in non-production environments.
+                            </p>
+                            <button
+                                onClick={grantPremium}
+                                className="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700"
+                            >
+                                Grant iOS Premium (Test)
+                            </button>
+                            {grantStatus && (
+                                <p className="text-xs mt-3 font-mono">{grantStatus}</p>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

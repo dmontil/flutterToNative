@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useUser } from "@/components/auth/user-provider";
 import { supabase } from "@/lib/supabase-client";
 import { DocPromotion } from "@/components/ui/doc-promotion";
-import { PRODUCTS } from "@/config/products";
+import { PRODUCTS, type ProductId } from "@/config/products";
 
 interface DocItem {
     title: string;
@@ -21,7 +21,7 @@ interface DocLayoutProps {
     title: string;
     items: DocItem[];
     children: React.ReactNode;
-    productId?: string;
+    productId?: ProductId;
     premiumTopics?: string[]; // IDs of topics that require premium access
 }
 
@@ -38,6 +38,7 @@ export function DocLayout({ title, items, children, productId = 'ios_playbook', 
 
     const syncRemoteProgress = useCallback(async () => {
         try {
+            if (!user) return;
             const { data, error } = await supabase
                 .from('user_progress')
                 .select('lesson_id')

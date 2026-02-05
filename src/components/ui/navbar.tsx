@@ -42,7 +42,7 @@ export function Navbar() {
             console.log('[Navbar] 🔄 Force reloading page to complete sign out...');
             window.location.href = "/";
             
-        } catch (error) {
+        } catch (error: any) {
             console.error('[Navbar] 💥 Sign out exception:', {
                 name: error?.name,
                 message: error?.message,

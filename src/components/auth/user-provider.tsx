@@ -55,7 +55,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             console.log('[UserProvider] 🏁 Starting race between query and timeout...');
             
             // Race between query and timeout
-            const { data, error } = await Promise.race([queryPromise, timeoutPromise]);
+            const result = await Promise.race([queryPromise, timeoutPromise]) as { data?: any; error?: any };
+            const { data, error } = result;
 
             console.log('[UserProvider] 📥 Profile query response:', {
                 hasData: !!data,

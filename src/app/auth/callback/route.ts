@@ -61,7 +61,11 @@ export async function GET(request: NextRequest) {
       }
       
       console.log('[Auth Callback] Verification successful:', result.data.user?.email)
-      return NextResponse.redirect(`${requestUrl.origin}/`)
+      const redirect = requestUrl.searchParams.get('redirect') || '/'
+      const safeRedirect = redirect.startsWith('/') && !redirect.startsWith('//')
+        ? redirect
+        : '/'
+      return NextResponse.redirect(`${requestUrl.origin}${safeRedirect}`)
     }
     
     console.log('[Auth Callback] No token found, redirecting to home')

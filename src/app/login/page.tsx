@@ -4,8 +4,16 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Navbar } from "@/components/ui/navbar";
 import { supabase } from "@/lib/supabase-client";
+import { useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
+    const searchParams = useSearchParams();
+    const redirect = searchParams.get("redirect") || "/";
+    const redirectTo =
+        typeof window !== "undefined"
+            ? `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`
+            : "/auth/callback";
+
     return (
         <div className="min-h-screen bg-background">
             <Navbar />
@@ -51,7 +59,7 @@ export default function LoginPage() {
                         magicLink={true}
                         view="magic_link"
                         showLinks={false}
-                        redirectTo={typeof window !== 'undefined' ? `${window.location.origin}/auth/callback` : '/auth/callback'}
+                        redirectTo={redirectTo}
                         theme="dark"
                         localization={{
                             variables: {

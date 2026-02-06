@@ -9,7 +9,7 @@ function getStripe() {
     throw new Error('STRIPE_SECRET_KEY is not configured');
   }
   return new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2025-12-15.clover',
+    apiVersion: '2024-06-20',
   });
 }
 
@@ -75,9 +75,18 @@ export async function POST(req: Request) {
         );
       }
 
-      // Determine which entitlement to grant based on metadata (preferred)
+      // Determine which entitlements to grant based on metadata
       const productId = metadata?.productId || 'ios_playbook';
-      const entitlement = productId === 'android_playbook' ? 'android_premium' : 'ios_premium';
+      let entitlementsToAdd: string[] = [];
+
+      if (productId === 'android_playbook') {
+        entitlementsToAdd = ['android_premium'];
+      } else if (productId === 'bundle_playbook') {
+        entitlementsToAdd = ['ios_premium', 'android_premium', 'bundle_premium'];
+      } else {
+        // Default to ios_playbook
+        entitlementsToAdd = ['ios_premium'];
+      }
 
       // Update user profile with entitlement
       const { data: existingProfile, error: fetchError } = await supabase
@@ -94,11 +103,12 @@ export async function POST(req: Request) {
         );
       }
 
-      // Add the new entitlement if it doesn't exist
+      // Add the new entitlements if they don't exist
       const currentEntitlements = existingProfile?.entitlements || [];
-      const newEntitlements = currentEntitlements.includes(entitlement)
-        ? currentEntitlements
-        : [...currentEntitlements, entitlement];
+      const newEntitlements = currentEntitlements.filter(
+        (ent: string) => !entitlementsToAdd.includes(ent)
+      );
+      newEntitlements.push(...entitlementsToAdd);
 
       // Update the profile
       const { error: updateError } = await supabase
@@ -117,7 +127,7 @@ export async function POST(req: Request) {
         );
       }
 
-      console.log(`✅ Granted ${entitlement} to user ${metadata.userId}`);
+      console.log(`✅ Granted ${entitlementsToAdd.join(', ')} to user ${metadata.userId}`);
       break;
     }
 

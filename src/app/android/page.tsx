@@ -15,7 +15,7 @@ export default function AndroidHome() {
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-6">
             <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
-            The Kotlin & Android Native Track
+            Launch Offer: $19.99 (was $49.99)
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
@@ -29,9 +29,9 @@ export default function AndroidHome() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/premium">
+            <Link href="/pricing#android">
               <Button size="lg" className="h-12 px-8 text-base group">
-                Access Android Premium
+                Get Android Access — $19.99
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>

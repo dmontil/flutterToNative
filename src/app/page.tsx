@@ -12,7 +12,7 @@ export default function Home() {
 
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-6">
-            Flutter → Native. Senior Track.
+            Launch Offer: $19.99 (was $49.99)
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
@@ -20,10 +20,16 @@ export default function Home() {
             Without Starting Over
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
             The premium playbooks built for senior Flutter engineers. Deep architecture, real-world tradeoffs,
             and interview-grade knowledge for iOS and Android.
           </p>
+
+          <div className="max-w-2xl mx-auto mb-10 grid gap-2 text-sm text-muted-foreground">
+            <div>✔ Senior architecture patterns you can apply immediately</div>
+            <div>✔ Flutter → Native mental models (fast ramp)</div>
+            <div>✔ Interview-ready answers and system design playbooks</div>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             <TrackCard
@@ -71,19 +77,32 @@ export default function Home() {
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-stretch">
             <PricingTeaser
               title="iOS Playbook"
-              price="$49"
-              compare="$99"
+              price="$19.99"
+              compare="$49.99"
               description="SwiftUI + UIKit + ARC + Senior Architecture"
+              badge="Save 60%"
               href="/pricing#ios"
               accent="indigo"
             />
             <PricingTeaser
               title="Android Playbook"
-              price="$49"
-              compare="$99"
+              price="$19.99"
+              compare="$49.99"
               description="Kotlin + Compose + Coroutines + Senior Architecture"
+              badge="Save 60%"
               href="/pricing#android"
               accent="green"
+            />
+          </div>
+          <div className="max-w-3xl mx-auto mt-6">
+            <PricingTeaser
+              title="Bundle: iOS + Android"
+              price="$29.99"
+              compare="$99.99"
+              description="Get both tracks. Best value for cross‑platform senior engineers."
+              badge="Save 70%"
+              href="/pricing#bundle"
+              accent="indigo"
             />
           </div>
           <div className="mt-6 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
@@ -191,13 +210,20 @@ function ValueCard({ icon, title, description }: { icon: React.ReactNode, title:
   );
 }
 
-function PricingTeaser({ title, price, compare, description, href, accent }: { title: string, price: string, compare: string, description: string, href: string, accent: "indigo" | "green" }) {
+function PricingTeaser({ title, price, compare, description, href, accent, badge }: { title: string, price: string, compare: string, description: string, href: string, accent: "indigo" | "green", badge?: string }) {
   const styles = ACCENTS[accent];
   return (
     <a href={href} className={`rounded-2xl border ${styles.border} bg-card p-8 shadow-sm hover:shadow-md transition-shadow`}>
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-xl font-bold">{title}</h3>
-        <span className="text-xs uppercase tracking-wider text-muted-foreground">One‑time</span>
+        <div className="flex items-center gap-2">
+          {badge && (
+            <span className="text-xs font-bold uppercase tracking-wider bg-green-500/10 text-green-500 px-2 py-1 rounded-full">
+              {badge}
+            </span>
+          )}
+          <span className="text-xs uppercase tracking-wider text-muted-foreground">One‑time</span>
+        </div>
       </div>
       <div className="flex items-baseline gap-2 mb-3">
         <span className="text-4xl font-bold">{price}</span>

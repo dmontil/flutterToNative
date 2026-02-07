@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { supabase } from './supabase-client';
+import { syncSessionToCurrentDomain, setSessionCookie } from './cross-domain-auth';
 
 /**
  * Syncs session across subdomains by checking cookies and localStorage
@@ -17,50 +18,49 @@ export function SessionSync() {
 
         const syncSession = async () => {
             try {
-                // Get current session from Supabase
-                const { data: { session }, error } = await supabase.auth.getSession();
-
-                if (error) {
-                    console.warn('[SessionSync] Error getting session:', error);
-                    return;
-                }
-
-                // Extract storage key for debugging
                 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
                 const projectRef = new URL(supabaseUrl).hostname.split('.')[0];
                 const storageKey = `sb-${projectRef}-auth-token`;
 
-                // Check localStorage and cookies
+                // Check localStorage
                 const localData = localStorage.getItem(storageKey);
-                const cookies = document.cookie.split(';').map(c => c.trim());
 
                 // Log current state for debugging
-                console.log('[SessionSync] Session state:', {
-                    hasSession: !!session,
+                console.log('[SessionSync] Checking session state:', {
                     hasLocalData: !!localData,
-                    cookieCount: cookies.filter(c => c.includes('sb-')).length,
                     currentDomain: window.location.hostname,
                     storageKey
                 });
 
-                // If we have a session but no localStorage data, restore from cookies
-                if (session && !localData) {
-                    console.log('[SessionSync] ✅ Session exists but localStorage missing - this is normal for cross-subdomain navigation');
+                // If we don't have local data, try to sync from cookies
+                if (!localData) {
+                    console.log('[SessionSync] 🔄 No local session found, attempting to sync from cookies...');
+                    const synced = await syncSessionToCurrentDomain();
                     
-                    // Manually store the session in localStorage for the current subdomain
-                    if (session.access_token) {
-                        const sessionData = {
-                            access_token: session.access_token,
-                            refresh_token: session.refresh_token,
-                            expires_at: session.expires_at,
-                            user: session.user
-                        };
+                    if (synced) {
+                        console.log('[SessionSync] ✅ Session synced successfully');
+                        return;
+                    }
+                }
+
+                // If we have local data, also set it as a cookie for other subdomains
+                if (localData) {
+                    try {
+                        const sessionData = JSON.parse(localData);
                         
-                        localStorage.setItem(storageKey, JSON.stringify(sessionData));
-                        console.log('[SessionSync] ✅ Session restored to localStorage');
+                        // Verify the session is still valid by checking with Supabase
+                        const { data: { session }, error } = await supabase.auth.getSession();
                         
-                        // Trigger a re-render by reloading the user state
-                        window.dispatchEvent(new Event('supabase-session-restored'));
+                        if (session && !error) {
+                            // Set cookie for other subdomains
+                            setSessionCookie(sessionData);
+                            console.log('[SessionSync] 🍪 Session cookie set for cross-subdomain access');
+                        } else if (error) {
+                            console.warn('[SessionSync] ⚠️ Session invalid, clearing local data');
+                            localStorage.removeItem(storageKey);
+                        }
+                    } catch (e) {
+                        console.warn('[SessionSync] ⚠️ Invalid session data in localStorage');
                     }
                 }
 
@@ -69,22 +69,22 @@ export function SessionSync() {
             }
         };
 
-        // Initial sync after a short delay to ensure everything is loaded
+        // Initial sync immediately on mount
         const initialSyncTimer = setTimeout(() => {
             if (!syncAttempted.current) {
                 syncSession();
                 syncAttempted.current = true;
             }
-        }, 1000);
+        }, 100);
 
-        // Set up periodic sync (every 30 seconds)
+        // Set up periodic sync (every 60 seconds instead of 30)
         syncInterval.current = setInterval(() => {
             syncSession();
-        }, 30000);
+        }, 60000);
 
         // Listen for storage changes from other tabs/windows
         const handleStorageChange = (e: StorageEvent) => {
-            if (e.key && e.key.includes('supabase')) {
+            if (e.key && (e.key.includes('supabase') || e.key.includes('sb-'))) {
                 console.log('[SessionSync] 🔄 Storage change detected, syncing...');
                 syncSession();
             }
@@ -92,14 +92,15 @@ export function SessionSync() {
 
         window.addEventListener('storage', handleStorageChange);
 
-        // Listen for custom restoration event
-        const handleSessionRestored = () => {
-            console.log('[SessionSync] ✅ Session restored event received');
-            // Force a page re-render to update user state
-            window.location.reload();
+        // Listen for visibility changes (when user switches back to tab)
+        const handleVisibilityChange = () => {
+            if (!document.hidden && syncAttempted.current) {
+                console.log('[SessionSync] 🔄 Tab became visible, syncing session...');
+                syncSession();
+            }
         };
 
-        window.addEventListener('supabase-session-restored', handleSessionRestored);
+        document.addEventListener('visibilitychange', handleVisibilityChange);
 
         return () => {
             clearTimeout(initialSyncTimer);
@@ -107,7 +108,7 @@ export function SessionSync() {
                 clearInterval(syncInterval.current);
             }
             window.removeEventListener('storage', handleStorageChange);
-            window.removeEventListener('supabase-session-restored', handleSessionRestored);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
         };
     }, []);
 

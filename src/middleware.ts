@@ -1,36 +1,75 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-const IOS_HOST = "ios.fluttertonative.pro";
-const ANDROID_HOST = "android.fluttertonative.pro";
-const ROOT_HOSTS = new Set(["fluttertonative.pro", "www.fluttertonative.pro"]);
+export async function middleware(req: NextRequest) {
+  const res = NextResponse.next()
 
-export function middleware(req: NextRequest) {
-  const host = req.headers.get("host") || "";
-  const { pathname, search } = req.nextUrl;
+  // Skip middleware for static files and API routes that don't need auth
+  if (
+    req.nextUrl.pathname.startsWith('/_next') ||
+    req.nextUrl.pathname.startsWith('/api/checkout') ||
+    req.nextUrl.pathname.startsWith('/api/webhooks') ||
+    req.nextUrl.pathname.startsWith('/static') ||
+    req.nextUrl.pathname.includes('.')
+  ) {
+    return res
+  }
 
-  // Root domain routing to subdomains
-  if (ROOT_HOSTS.has(host)) {
-    if (pathname.startsWith("/ios")) {
-      const nextPath = pathname.replace(/^\/ios/, "") || "/";
-      return NextResponse.redirect(new URL(`${req.nextUrl.protocol}//${IOS_HOST}${nextPath}${search}`));
+  try {
+    // Create a Supabase client configured to use cookies
+    const supabase = createMiddlewareClient(
+      { req, res }
+    )
+
+    // Check if we have a session
+    const { data: { session } } = await supabase.auth.getSession()
+
+    // Set a cookie that can be shared across subdomains
+    if (session?.access_token) {
+      const hostname = req.nextUrl.hostname
+      
+      // Determine the cookie domain
+      let cookieDomain = ''
+      if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+        const parts = hostname.split('.')
+        if (parts.length >= 2) {
+          cookieDomain = '.' + parts.slice(-2).join('.')
+        }
+      }
+
+      // Set cross-subdomain session indicator (24 hours duration)
+      const sessionIndicator = `sb-session-indicator=true; Path=/; HttpOnly; SameSite=Lax; Max-Age=86400${
+        cookieDomain ? `; Domain=${cookieDomain}; Secure` : ''
+      }`
+      
+      // Only set if not already present
+      if (!req.cookies.get('sb-session-indicator')) {
+        res.headers.append('Set-Cookie', sessionIndicator)
+      }
+
+      console.log('[Middleware] Session active:', {
+        hasSession: !!session,
+        hostname,
+        cookieDomain: cookieDomain || 'localhost'
+      })
     }
-    if (pathname.startsWith("/android")) {
-      return NextResponse.redirect(new URL(`${req.nextUrl.protocol}//${ANDROID_HOST}${pathname}${search}`));
-    }
-  }
 
-  // Subdomain defaults
-  if (host.startsWith("ios.") && pathname === "/") {
-    return NextResponse.rewrite(new URL("/ios", req.url));
+    return res
+  } catch (error) {
+    console.error('[Middleware] Error:', error)
+    return res
   }
-  if (host.startsWith("android.") && pathname === "/") {
-    return NextResponse.rewrite(new URL("/android", req.url));
-  }
-
-  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/", "/ios/:path*", "/android/:path*"],
-};
+  matcher: [
+    /*
+     * Match all request paths except:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+}

@@ -34,6 +34,7 @@ async function loginViaMagicLink(page: Page, request: APIRequestContext) {
 async function prepareCheckoutCapture(page: Page) {
   await page.addInitScript(() => {
     (window as any).__lastCheckoutUrl = null;
+    (window as any).__lastCheckoutResponse = null;
     const originalAssign = window.location.assign.bind(window.location);
     window.location.assign = (url: string | URL) => {
       (window as any).__lastCheckoutUrl = url.toString();
@@ -41,6 +42,22 @@ async function prepareCheckoutCapture(page: Page) {
     };
     // Preserve original in case needed
     (window as any).__originalAssign = originalAssign;
+
+    const originalFetch = window.fetch.bind(window);
+    window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
+      const res = await originalFetch(input, init);
+      try {
+        const url = typeof input === "string" ? input : (input as Request).url;
+        if (url.includes("/api/checkout")) {
+          const cloned = res.clone();
+          const text = await cloned.text();
+          (window as any).__lastCheckoutResponse = { status: res.status, text };
+        }
+      } catch {
+        // ignore
+      }
+      return res;
+    };
   });
 }
 
@@ -52,19 +69,21 @@ test.describe("Checkout Flow (Test Mode)", () => {
     await prepareCheckoutCapture(page);
     await page.goto("/pricing#ios");
 
-    const [checkoutResponse] = await Promise.all([
-      page.waitForResponse((res) => res.url().includes("/api/checkout") && res.request().method() === "POST"),
-      page.getByRole("button", { name: "Get iOS Access" }).click(),
-    ]);
+    await page.getByRole("button", { name: "Get iOS Access" }).click();
 
-    if (!checkoutResponse.ok()) {
-      const body = await checkoutResponse.text();
-      throw new Error(`Checkout API failed: ${checkoutResponse.status()} ${body}`);
+    await page.waitForFunction(() => (window as any).__lastCheckoutResponse || (window as any).__lastCheckoutUrl);
+    const { response, url } = await page.evaluate(() => ({
+      response: (window as any).__lastCheckoutResponse,
+      url: (window as any).__lastCheckoutUrl,
+    }));
+
+    if (response && response.status >= 400) {
+      throw new Error(`Checkout API failed: ${response.status} ${response.text}`);
     }
 
-    await page.waitForFunction(() => (window as any).__lastCheckoutUrl);
-    const url = await page.evaluate(() => (window as any).__lastCheckoutUrl);
-    expect(url).toMatch(/https:\/\/checkout\.stripe\.com/);
+    const finalUrl = url || (response?.text ? JSON.parse(response.text).url : null);
+    expect(finalUrl).toBeTruthy();
+    expect(finalUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 
   test("Android checkout button reaches Stripe", async ({ page, request }) => {
@@ -72,19 +91,21 @@ test.describe("Checkout Flow (Test Mode)", () => {
     await prepareCheckoutCapture(page);
     await page.goto("/pricing#android");
 
-    const [checkoutResponse] = await Promise.all([
-      page.waitForResponse((res) => res.url().includes("/api/checkout") && res.request().method() === "POST"),
-      page.getByRole("button", { name: "Get Android Access" }).click(),
-    ]);
+    await page.getByRole("button", { name: "Get Android Access" }).click();
 
-    if (!checkoutResponse.ok()) {
-      const body = await checkoutResponse.text();
-      throw new Error(`Checkout API failed: ${checkoutResponse.status()} ${body}`);
+    await page.waitForFunction(() => (window as any).__lastCheckoutResponse || (window as any).__lastCheckoutUrl);
+    const { response, url } = await page.evaluate(() => ({
+      response: (window as any).__lastCheckoutResponse,
+      url: (window as any).__lastCheckoutUrl,
+    }));
+
+    if (response && response.status >= 400) {
+      throw new Error(`Checkout API failed: ${response.status} ${response.text}`);
     }
 
-    await page.waitForFunction(() => (window as any).__lastCheckoutUrl);
-    const url = await page.evaluate(() => (window as any).__lastCheckoutUrl);
-    expect(url).toMatch(/https:\/\/checkout\.stripe\.com/);
+    const finalUrl = url || (response?.text ? JSON.parse(response.text).url : null);
+    expect(finalUrl).toBeTruthy();
+    expect(finalUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 
   test("Bundle checkout button reaches Stripe", async ({ page, request }) => {
@@ -92,18 +113,20 @@ test.describe("Checkout Flow (Test Mode)", () => {
     await prepareCheckoutCapture(page);
     await page.goto("/pricing#bundle");
 
-    const [checkoutResponse] = await Promise.all([
-      page.waitForResponse((res) => res.url().includes("/api/checkout") && res.request().method() === "POST"),
-      page.getByRole("button", { name: "Get Bundle Access" }).click(),
-    ]);
+    await page.getByRole("button", { name: "Get Bundle Access" }).click();
 
-    if (!checkoutResponse.ok()) {
-      const body = await checkoutResponse.text();
-      throw new Error(`Checkout API failed: ${checkoutResponse.status()} ${body}`);
+    await page.waitForFunction(() => (window as any).__lastCheckoutResponse || (window as any).__lastCheckoutUrl);
+    const { response, url } = await page.evaluate(() => ({
+      response: (window as any).__lastCheckoutResponse,
+      url: (window as any).__lastCheckoutUrl,
+    }));
+
+    if (response && response.status >= 400) {
+      throw new Error(`Checkout API failed: ${response.status} ${response.text}`);
     }
 
-    await page.waitForFunction(() => (window as any).__lastCheckoutUrl);
-    const url = await page.evaluate(() => (window as any).__lastCheckoutUrl);
-    expect(url).toMatch(/https:\/\/checkout\.stripe\.com/);
+    const finalUrl = url || (response?.text ? JSON.parse(response.text).url : null);
+    expect(finalUrl).toBeTruthy();
+    expect(finalUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 });

@@ -11,6 +11,17 @@ function getStripe() {
     return new Stripe(process.env.STRIPE_SECRET_KEY);
 }
 
+function normalizeOrigin(value?: string | null): string | null {
+    if (!value) return null;
+    try {
+        const trimmed = value.trim();
+        const url = new URL(trimmed);
+        return url.origin;
+    } catch {
+        return null;
+    }
+}
+
 export async function POST(req: Request) {
     try {
         const stripe = getStripe();
@@ -55,17 +66,20 @@ export async function POST(req: Request) {
         }
 
         // Use validated origin for redirects to avoid open-redirect issues
-        const origin = req.headers.get("origin");
-        const allowedOrigins = new Set(
-            [
-                process.env.NEXT_PUBLIC_SITE_URL,
-                process.env.NEXT_PUBLIC_IOS_SITE_URL,
-                process.env.NEXT_PUBLIC_ANDROID_SITE_URL,
-            ].filter(Boolean)
-        );
-        const baseUrl = origin && allowedOrigins.has(origin)
-            ? origin
-            : process.env.NEXT_PUBLIC_SITE_URL || "https://www.fluttertonative.pro";
+        const originHeader = normalizeOrigin(req.headers.get("origin"));
+        const refererHeader = normalizeOrigin(req.headers.get("referer"));
+        const envSite = normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL);
+        const envIos = normalizeOrigin(process.env.NEXT_PUBLIC_IOS_SITE_URL);
+        const envAndroid = normalizeOrigin(process.env.NEXT_PUBLIC_ANDROID_SITE_URL);
+        const envE2E = normalizeOrigin(process.env.E2E_BASE_URL);
+
+        const allowedOrigins = new Set([envSite, envIos, envAndroid, envE2E].filter(Boolean));
+        const baseUrl =
+            (originHeader && allowedOrigins.has(originHeader) ? originHeader : null) ||
+            (refererHeader && allowedOrigins.has(refererHeader) ? refererHeader : null) ||
+            envSite ||
+            envE2E ||
+            "http://localhost:3002";
 
         const session = await stripe.checkout.sessions.create({
             line_items: [{

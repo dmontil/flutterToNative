@@ -70,8 +70,8 @@ export async function syncSessionToCurrentDomain(): Promise<boolean> {
                 }, 100);
                 
                 return true;
-            } catch (e) {
-                console.warn('[CrossDomainAuth] ⚠️ Invalid session data in cookies');
+            } catch (error) {
+                console.warn('[CrossDomainAuth] ⚠️ Invalid session data in cookies', error);
             }
         }
         

@@ -52,8 +52,8 @@ const customStorage = {
                 JSON.parse(cookieValue); // Validate JSON
                 localStorage.setItem(key, cookieValue);
                 return cookieValue;
-            } catch (e) {
-                console.warn('[CustomStorage] ⚠️ Invalid JSON in cookie');
+            } catch (error) {
+                console.warn('[CustomStorage] ⚠️ Invalid JSON in cookie', error);
                 return null;
             }
         }

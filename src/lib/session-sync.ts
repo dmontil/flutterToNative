@@ -59,8 +59,8 @@ export function SessionSync() {
                             console.warn('[SessionSync] ⚠️ Session invalid, clearing local data');
                             localStorage.removeItem(storageKey);
                         }
-                    } catch (e) {
-                        console.warn('[SessionSync] ⚠️ Invalid session data in localStorage');
+                    } catch (error) {
+                        console.warn('[SessionSync] ⚠️ Invalid session data in localStorage', error);
                     }
                 }
 

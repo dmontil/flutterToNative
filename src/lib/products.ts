@@ -24,8 +24,8 @@ export const PRODUCTS: Record<ProductId, ProductConfig> = {
     name: 'Flutter to iOS Playbook',
     description: 'Guía interactiva completa para migrar tu app Flutter a iOS nativo',
     prices: {
-      USD: process.env.STRIPE_PRICE_ID_IOS_USD || '',
-      EUR: process.env.STRIPE_PRICE_ID_IOS_EUR || '',
+      USD: process.env.STRIPE_PRICE_ID_IOS_USD?.trim() || '',
+      EUR: process.env.STRIPE_PRICE_ID_IOS_EUR?.trim() || '',
     },
     entitlements: ['ios_premium'],
     amount: {
@@ -38,8 +38,8 @@ export const PRODUCTS: Record<ProductId, ProductConfig> = {
     name: 'Flutter to Android Playbook',
     description: 'Guía interactiva completa para migrar tu app Flutter a Android nativo',
     prices: {
-      USD: process.env.STRIPE_PRICE_ID_ANDROID_USD || '',
-      EUR: process.env.STRIPE_PRICE_ID_ANDROID_EUR || '',
+      USD: process.env.STRIPE_PRICE_ID_ANDROID_USD?.trim() || '',
+      EUR: process.env.STRIPE_PRICE_ID_ANDROID_EUR?.trim() || '',
     },
     entitlements: ['android_premium'],
     amount: {
@@ -52,8 +52,8 @@ export const PRODUCTS: Record<ProductId, ProductConfig> = {
     name: 'Flutter Playbook Bundle (iOS + Android)',
     description: 'Ambos playbooks con descuento especial - Mejor valor',
     prices: {
-      USD: process.env.STRIPE_PRICE_ID_BUNDLE_USD || '',
-      EUR: process.env.STRIPE_PRICE_ID_BUNDLE_EUR || '',
+      USD: process.env.STRIPE_PRICE_ID_BUNDLE_USD?.trim() || '',
+      EUR: process.env.STRIPE_PRICE_ID_BUNDLE_EUR?.trim() || '',
     },
     entitlements: ['ios_premium', 'android_premium', 'bundle_premium'],
     amount: {

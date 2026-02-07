@@ -18,7 +18,10 @@ async function loginViaMagicLink(page: Page, request: APIRequestContext) {
     },
   });
 
-  expect(response.ok()).toBeTruthy();
+  if (!response.ok()) {
+    const body = await response.text();
+    throw new Error(`E2E login failed: ${response.status()} ${body}`);
+  }
   const { session, storageKey } = await response.json();
   expect(session?.access_token).toBeTruthy();
   expect(storageKey).toBeTruthy();
@@ -35,23 +38,56 @@ test.describe("Checkout Flow (Test Mode)", () => {
     await loginViaMagicLink(page, request);
     await page.goto("/pricing#ios");
 
-    await page.getByRole("button", { name: "Get iOS Access" }).click();
-    await page.waitForURL(/checkout\.stripe\.com/);
+    const [checkoutResponse] = await Promise.all([
+      page.waitForResponse((res) => res.url().includes("/api/checkout") && res.request().method() === "POST"),
+      page.getByRole("button", { name: "Get iOS Access" }).click(),
+    ]);
+
+    if (!checkoutResponse.ok()) {
+      const body = await checkoutResponse.text();
+      throw new Error(`Checkout API failed: ${checkoutResponse.status()} ${body}`);
+    }
+
+    const data = await checkoutResponse.json();
+    expect(data.url).toBeTruthy();
+    expect(data.url).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 
   test("Android checkout button reaches Stripe", async ({ page, request }) => {
     await loginViaMagicLink(page, request);
     await page.goto("/pricing#android");
 
-    await page.getByRole("button", { name: "Get Android Access" }).click();
-    await page.waitForURL(/checkout\.stripe\.com/);
+    const [checkoutResponse] = await Promise.all([
+      page.waitForResponse((res) => res.url().includes("/api/checkout") && res.request().method() === "POST"),
+      page.getByRole("button", { name: "Get Android Access" }).click(),
+    ]);
+
+    if (!checkoutResponse.ok()) {
+      const body = await checkoutResponse.text();
+      throw new Error(`Checkout API failed: ${checkoutResponse.status()} ${body}`);
+    }
+
+    const data = await checkoutResponse.json();
+    expect(data.url).toBeTruthy();
+    expect(data.url).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 
   test("Bundle checkout button reaches Stripe", async ({ page, request }) => {
     await loginViaMagicLink(page, request);
     await page.goto("/pricing#bundle");
 
-    await page.getByRole("button", { name: "Get Bundle Access" }).click();
-    await page.waitForURL(/checkout\.stripe\.com/);
+    const [checkoutResponse] = await Promise.all([
+      page.waitForResponse((res) => res.url().includes("/api/checkout") && res.request().method() === "POST"),
+      page.getByRole("button", { name: "Get Bundle Access" }).click(),
+    ]);
+
+    if (!checkoutResponse.ok()) {
+      const body = await checkoutResponse.text();
+      throw new Error(`Checkout API failed: ${checkoutResponse.status()} ${body}`);
+    }
+
+    const data = await checkoutResponse.json();
+    expect(data.url).toBeTruthy();
+    expect(data.url).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 });

@@ -65,7 +65,9 @@ export const PRODUCTS: Record<ProductId, ProductConfig> = {
 
 // Helper function to get price ID for product and currency
 export function getPriceId(productId: ProductId, currency: Currency = 'USD'): string {
-  return PRODUCTS[productId].prices[currency];
+  const priceId = PRODUCTS[productId].prices[currency];
+  console.log('[getPriceId]', { productId, currency, priceId, allPrices: PRODUCTS[productId].prices });
+  return priceId;
 }
 
 // Helper function to get entitlements for product

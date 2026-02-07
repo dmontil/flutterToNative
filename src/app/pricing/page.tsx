@@ -50,8 +50,19 @@ export default function PricingPage() {
             });
 
             console.log('[Checkout] Response status:', response.status);
-            const data = await response.json();
-            console.log('[Checkout] Response data:', data);
+            
+            let data;
+            const responseText = await response.text();
+            console.log('[Checkout] Raw response:', responseText);
+            
+            try {
+                data = JSON.parse(responseText);
+                console.log('[Checkout] Response data:', data);
+            } catch (e) {
+                console.error('[Checkout] Failed to parse JSON response:', responseText);
+                console.error('[Checkout] Response was not valid JSON:', e);
+                return;
+            }
 
             if (data.url) {
                 console.log('[Checkout] Redirecting to Stripe:', data.url);

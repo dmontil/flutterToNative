@@ -70,12 +70,24 @@ export async function POST(req: Request) {
             return new NextResponse("Invalid currency", { status: 400 });
         }
 
+        // Debug environment variables
+        console.log('[Checkout API] Environment check:', {
+            hasStripeKey: !!process.env.STRIPE_SECRET_KEY,
+            hasIosUsd: !!process.env.STRIPE_PRICE_ID_IOS_USD,
+            hasIosEur: !!process.env.STRIPE_PRICE_ID_IOS_EUR,
+            hasAndroidUsd: !!process.env.STRIPE_PRICE_ID_ANDROID_USD,
+            hasAndroidEur: !!process.env.STRIPE_PRICE_ID_ANDROID_EUR,
+            hasBundleUsd: !!process.env.STRIPE_PRICE_ID_BUNDLE_USD,
+            hasBundleEur: !!process.env.STRIPE_PRICE_ID_BUNDLE_EUR,
+        });
+
         // Get the appropriate price ID for the product and currency
         const stripePriceId = getPriceId(productId as ProductId, currency as Currency);
         console.log('[Checkout API] Price ID for', productId, currency, ':', stripePriceId);
 
         if (!stripePriceId) {
             console.error(`[Checkout API] Price ID not found for product: ${productId}, currency: ${currency}`);
+            console.error('[Checkout API] Available env vars:', Object.keys(process.env).filter(k => k.includes('STRIPE')));
             return new NextResponse("Price configuration error", { status: 500 });
         }
 

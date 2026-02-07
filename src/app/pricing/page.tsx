@@ -46,7 +46,7 @@ export default function PricingPage() {
             const data = await response.json();
 
             if (data.url) {
-                window.location.href = data.url;
+                window.location.assign(data.url);
             }
         } catch (error) {
             console.error("Checkout error", error);

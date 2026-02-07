@@ -8,7 +8,10 @@ function getStripe() {
     if (!process.env.STRIPE_SECRET_KEY) {
         throw new Error("STRIPE_SECRET_KEY not configured");
     }
-    return new Stripe(process.env.STRIPE_SECRET_KEY);
+    // Clean the key by trimming any whitespace/newlines
+    const cleanKey = process.env.STRIPE_SECRET_KEY.trim();
+    console.log('[getStripe] Key length:', cleanKey.length, 'starts with:', cleanKey.substring(0, 10));
+    return new Stripe(cleanKey);
 }
 
 function normalizeOrigin(value?: string | null): string | null {

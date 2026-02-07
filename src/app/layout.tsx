@@ -68,6 +68,7 @@ export const metadata: Metadata = {
 
 import { UserProvider } from "@/components/auth/user-provider";
 import { JsonLd } from "@/components/seo/json-ld";
+import { SessionSync } from "@/lib/session-sync";
 
 export default function RootLayout({
   children,
@@ -78,6 +79,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <UserProvider>
+          <SessionSync />
           {children}
         </UserProvider>
         <JsonLd type="website" />

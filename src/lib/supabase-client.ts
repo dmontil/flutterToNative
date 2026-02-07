@@ -7,12 +7,61 @@ if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('Missing Supabase environment variables');
 }
 
+// Get the domain for cookie sharing across subdomains
+function getCookieDomain(): string | undefined {
+    if (typeof window === 'undefined') return undefined;
+    
+    const hostname = window.location.hostname;
+    
+    // For local development
+    if (hostname === 'localhost' || hostname === '127.0.0.1') {
+        return undefined;
+    }
+    
+    // For production: extract the main domain
+    // e.g., ios.fluttertonative.pro -> fluttertonative.pro
+    const parts = hostname.split('.');
+    if (parts.length >= 2) {
+        return '.' + parts.slice(-2).join('.'); // .fluttertonative.pro
+    }
+    
+    return undefined;
+}
+
 // Create a single Supabase client instance
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
         autoRefreshToken: true,
         persistSession: true,
-        detectSessionInUrl: false // Disable auto detection to avoid conflicts
+        detectSessionInUrl: false, // Disable auto detection to avoid conflicts
+        storage: {
+            // Use custom storage that shares cookies across subdomains
+            getItem: (key: string) => {
+                if (typeof window === 'undefined') return null;
+                return localStorage.getItem(key);
+            },
+            setItem: (key: string, value: string) => {
+                if (typeof window === 'undefined') return;
+                localStorage.setItem(key, value);
+                
+                // Also set as cookie with cross-subdomain domain
+                const domain = getCookieDomain();
+                if (domain) {
+                    document.cookie = `${key}=${encodeURIComponent(value)}; path=/; domain=${domain}; SameSite=Lax`;
+                }
+            },
+            removeItem: (key: string) => {
+                if (typeof window === 'undefined') return;
+                localStorage.removeItem(key);
+                
+                // Also remove from cookie with cross-subdomain domain
+                const domain = getCookieDomain();
+                if (domain) {
+                    document.cookie = `${key}=; path=/; domain=${domain}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+                    document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+                }
+            }
+        }
     }
 });
 

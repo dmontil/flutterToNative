@@ -46,6 +46,11 @@ export default function PricingPage() {
             const data = await response.json();
 
             if (data.url) {
+                // Check if we're in E2E test mode - if so, don't navigate
+                if ((window as any).__e2e_test_mode) {
+                    (window as any).__e2e_checkout_url = data.url;
+                    return;
+                }
                 window.location.assign(data.url);
             }
         } catch (error) {

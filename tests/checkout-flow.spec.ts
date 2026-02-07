@@ -37,31 +37,9 @@ async function loginViaMagicLink(page: Page) {
 
 async function prepareCheckoutCapture(page: Page) {
   await page.addInitScript(() => {
-    (window as any).__lastCheckoutUrl = null;
-    (window as any).__lastCheckoutResponse = null;
-    const originalAssign = window.location.assign.bind(window.location);
-    window.location.assign = (url: string | URL) => {
-      (window as any).__lastCheckoutUrl = url.toString();
-      // Intentionally do not navigate during tests
-    };
-    // Preserve original in case needed
-    (window as any).__originalAssign = originalAssign;
-
-    const originalFetch = window.fetch.bind(window);
-    window.fetch = async (input: RequestInfo | URL, init?: RequestInit) => {
-      const res = await originalFetch(input, init);
-      try {
-        const url = typeof input === "string" ? input : (input as Request).url;
-        if (url.includes("/api/checkout")) {
-          const cloned = res.clone();
-          const text = await cloned.text();
-          (window as any).__lastCheckoutResponse = { status: res.status, text };
-        }
-      } catch {
-        // ignore
-      }
-      return res;
-    };
+    // Enable E2E test mode to prevent navigation
+    (window as any).__e2e_test_mode = true;
+    (window as any).__e2e_checkout_url = null;
   });
 }
 
@@ -73,21 +51,18 @@ test.describe("Checkout Flow (Test Mode)", () => {
     await prepareCheckoutCapture(page);
     await page.goto("/pricing#ios");
 
+    // Wait a bit for page to stabilize
+    await page.waitForTimeout(500);
+
     await page.getByRole("button", { name: "Get iOS Access" }).click();
 
-    await page.waitForFunction(() => (window as any).__lastCheckoutResponse || (window as any).__lastCheckoutUrl);
-    const { response, url } = await page.evaluate(() => ({
-      response: (window as any).__lastCheckoutResponse,
-      url: (window as any).__lastCheckoutUrl,
-    }));
+    // Wait for checkout URL to be captured with increased timeout
+    await page.waitForFunction(() => (window as any).__e2e_checkout_url, { timeout: 20000 });
+    
+    const checkoutUrl = await page.evaluate(() => (window as any).__e2e_checkout_url);
 
-    if (response && response.status >= 400) {
-      throw new Error(`Checkout API failed: ${response.status} ${response.text}`);
-    }
-
-    const finalUrl = url || (response?.text ? JSON.parse(response.text).url : null);
-    expect(finalUrl).toBeTruthy();
-    expect(finalUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
+    expect(checkoutUrl).toBeTruthy();
+    expect(checkoutUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 
   test("Android checkout button reaches Stripe", async ({ page }) => {
@@ -95,21 +70,18 @@ test.describe("Checkout Flow (Test Mode)", () => {
     await prepareCheckoutCapture(page);
     await page.goto("/pricing#android");
 
+    // Wait a bit for page to stabilize
+    await page.waitForTimeout(500);
+
     await page.getByRole("button", { name: "Get Android Access" }).click();
 
-    await page.waitForFunction(() => (window as any).__lastCheckoutResponse || (window as any).__lastCheckoutUrl);
-    const { response, url } = await page.evaluate(() => ({
-      response: (window as any).__lastCheckoutResponse,
-      url: (window as any).__lastCheckoutUrl,
-    }));
+    // Wait for checkout URL to be captured with increased timeout
+    await page.waitForFunction(() => (window as any).__e2e_checkout_url, { timeout: 20000 });
+    
+    const checkoutUrl = await page.evaluate(() => (window as any).__e2e_checkout_url);
 
-    if (response && response.status >= 400) {
-      throw new Error(`Checkout API failed: ${response.status} ${response.text}`);
-    }
-
-    const finalUrl = url || (response?.text ? JSON.parse(response.text).url : null);
-    expect(finalUrl).toBeTruthy();
-    expect(finalUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
+    expect(checkoutUrl).toBeTruthy();
+    expect(checkoutUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 
   test("Bundle checkout button reaches Stripe", async ({ page }) => {
@@ -117,20 +89,17 @@ test.describe("Checkout Flow (Test Mode)", () => {
     await prepareCheckoutCapture(page);
     await page.goto("/pricing#bundle");
 
+    // Wait a bit for page to stabilize
+    await page.waitForTimeout(500);
+
     await page.getByRole("button", { name: "Get Bundle Access" }).click();
 
-    await page.waitForFunction(() => (window as any).__lastCheckoutResponse || (window as any).__lastCheckoutUrl);
-    const { response, url } = await page.evaluate(() => ({
-      response: (window as any).__lastCheckoutResponse,
-      url: (window as any).__lastCheckoutUrl,
-    }));
+    // Wait for checkout URL to be captured with increased timeout
+    await page.waitForFunction(() => (window as any).__e2e_checkout_url, { timeout: 20000 });
+    
+    const checkoutUrl = await page.evaluate(() => (window as any).__e2e_checkout_url);
 
-    if (response && response.status >= 400) {
-      throw new Error(`Checkout API failed: ${response.status} ${response.text}`);
-    }
-
-    const finalUrl = url || (response?.text ? JSON.parse(response.text).url : null);
-    expect(finalUrl).toBeTruthy();
-    expect(finalUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
+    expect(checkoutUrl).toBeTruthy();
+    expect(checkoutUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 });

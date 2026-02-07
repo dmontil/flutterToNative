@@ -129,9 +129,25 @@ export async function POST(req: Request) {
 
         console.log('[Checkout API] Session params:', JSON.stringify(sessionParams, null, 2));
 
-        const session = await stripe.checkout.sessions.create(sessionParams);
-
-        console.log('[Checkout API] Stripe session created:', session.id, 'URL:', session.url);
+        let session;
+        try {
+            console.log('[Checkout API] Calling stripe.checkout.sessions.create...');
+            session = await stripe.checkout.sessions.create(sessionParams);
+            console.log('[Checkout API] Stripe session created successfully:', session.id, 'URL:', session.url);
+        } catch (stripeError: any) {
+            console.error('[Checkout API] Stripe session creation failed:', stripeError);
+            console.error('[Checkout API] Stripe error details:', {
+                type: stripeError.type,
+                code: stripeError.code,
+                message: stripeError.message,
+                param: stripeError.param,
+                statusCode: stripeError.statusCode
+            });
+            return new NextResponse(JSON.stringify({ error: 'Stripe session creation failed', details: stripeError.message }), { 
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
 
         return NextResponse.json({ url: session.url });
     } catch (error: any) {

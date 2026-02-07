@@ -115,7 +115,7 @@ export function Navbar() {
                                     Sign In
                                 </Link>
                                 <Link href="/premium">
-                                    <Button variant="default" size="sm" className="font-bold">Get Premium</Button>
+                                    <Button variant="default" size="sm" className="font-bold">Get Access</Button>
                                 </Link>
                             </>
                         )}
@@ -192,7 +192,7 @@ export function Navbar() {
                                     Sign In
                                 </Link>
                                 <Link href="/premium" onClick={() => setIsOpen(false)}>
-                                    <Button className="w-full font-bold">Get Premium</Button>
+                                    <Button className="w-full font-bold">Get Access</Button>
                                 </Link>
                             </>
                         )}

@@ -2,13 +2,15 @@ import { test, expect, Page, APIRequestContext } from "@playwright/test";
 
 const E2E_SECRET = process.env.E2E_TEST_SECRET || "";
 const TEST_EMAIL = process.env.E2E_TEST_EMAIL || "e2e-test@fluttertonative.pro";
+const BASE_URL = process.env.E2E_BASE_URL || "http://127.0.0.1:3002";
 
 function shouldSkip() {
   return !E2E_SECRET;
 }
 
-async function loginViaMagicLink(page: Page, request: APIRequestContext) {
-  const response = await request.post("/api/e2e/login", {
+async function loginViaMagicLink(page: Page) {
+  const api = await page.request.newContext({ baseURL: BASE_URL });
+  const response = await api.post("/api/e2e/login", {
     headers: {
       "x-e2e-secret": E2E_SECRET,
       "Content-Type": "application/json",
@@ -64,8 +66,8 @@ async function prepareCheckoutCapture(page: Page) {
 test.describe("Checkout Flow (Test Mode)", () => {
   test.skip(shouldSkip(), "E2E_TEST_SECRET not set");
 
-  test("iOS checkout button reaches Stripe", async ({ page, request }) => {
-    await loginViaMagicLink(page, request);
+  test("iOS checkout button reaches Stripe", async ({ page }) => {
+    await loginViaMagicLink(page);
     await prepareCheckoutCapture(page);
     await page.goto("/pricing#ios");
 
@@ -86,8 +88,8 @@ test.describe("Checkout Flow (Test Mode)", () => {
     expect(finalUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 
-  test("Android checkout button reaches Stripe", async ({ page, request }) => {
-    await loginViaMagicLink(page, request);
+  test("Android checkout button reaches Stripe", async ({ page }) => {
+    await loginViaMagicLink(page);
     await prepareCheckoutCapture(page);
     await page.goto("/pricing#android");
 
@@ -108,8 +110,8 @@ test.describe("Checkout Flow (Test Mode)", () => {
     expect(finalUrl).toMatch(/https:\/\/checkout\.stripe\.com/);
   });
 
-  test("Bundle checkout button reaches Stripe", async ({ page, request }) => {
-    await loginViaMagicLink(page, request);
+  test("Bundle checkout button reaches Stripe", async ({ page }) => {
+    await loginViaMagicLink(page);
     await prepareCheckoutCapture(page);
     await page.goto("/pricing#bundle");
 

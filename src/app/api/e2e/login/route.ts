@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     return new NextResponse("Unauthorized", { status: 401 });
   }
 
-  const { email, redirectTo } = await req.json().catch(() => ({}));
+  const { email } = await req.json().catch(() => ({}));
   if (!email || typeof email !== "string") {
     return new NextResponse("Email is required", { status: 400 });
   }
@@ -30,17 +30,42 @@ export async function POST(req: Request) {
   const { data, error } = await supabase.auth.admin.generateLink({
     type: "magiclink",
     email,
-    options: {
-      redirectTo: redirectTo || `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3002"}/auth/callback`,
-    },
   });
 
-  if (error || !data?.properties?.action_link) {
+  const hashedToken =
+    data?.properties?.hashed_token ||
+    (data?.properties as any)?.hashedToken;
+
+  if (error || !hashedToken) {
     console.error("[E2E_LOGIN] generateLink error", error);
     return new NextResponse("Failed to generate magic link", { status: 500 });
   }
 
+  if (!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    return new NextResponse("Supabase anon key not configured", { status: 500 });
+  }
+
+  const supabaseAnon = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+
+  const { data: verifyData, error: verifyError } = await supabaseAnon.auth.verifyOtp({
+    type: "email",
+    token_hash: hashedToken,
+  });
+
+  if (verifyError || !verifyData?.session) {
+    console.error("[E2E_LOGIN] verifyOtp error", verifyError);
+    return new NextResponse("Failed to verify magic link", { status: 500 });
+  }
+
+  const projectRef = new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname.split(".")[0];
+  const storageKey = `sb-${projectRef}-auth-token`;
+
   return NextResponse.json({
-    actionLink: data.properties.action_link,
+    session: verifyData.session,
+    storageKey,
+    user: verifyData.user,
   });
 }

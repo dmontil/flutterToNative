@@ -7,7 +7,7 @@ function shouldSkip() {
   return !E2E_SECRET;
 }
 
-async function loginViaMagicLink(page: Page, request: APIRequestContext, redirectPath: string) {
+async function loginViaMagicLink(page: Page, request: APIRequestContext) {
   const response = await request.post("/api/e2e/login", {
     headers: {
       "x-e2e-secret": E2E_SECRET,
@@ -15,23 +15,24 @@ async function loginViaMagicLink(page: Page, request: APIRequestContext, redirec
     },
     data: {
       email: TEST_EMAIL,
-      redirectTo: `${process.env.E2E_BASE_URL || "http://localhost:3002"}/auth/callback?redirect=${encodeURIComponent(redirectPath)}`,
     },
   });
 
   expect(response.ok()).toBeTruthy();
-  const { actionLink } = await response.json();
-  expect(actionLink).toBeTruthy();
+  const { session, storageKey } = await response.json();
+  expect(session?.access_token).toBeTruthy();
+  expect(storageKey).toBeTruthy();
 
-  await page.goto(actionLink);
-  await page.waitForURL(new RegExp(redirectPath.replace(/\//g, "\\/")));
+  await page.addInitScript(({ key, value }) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  }, { key: storageKey, value: session });
 }
 
 test.describe("Checkout Flow (Test Mode)", () => {
   test.skip(shouldSkip(), "E2E_TEST_SECRET not set");
 
   test("iOS checkout button reaches Stripe", async ({ page, request }) => {
-    await loginViaMagicLink(page, request, "/pricing");
+    await loginViaMagicLink(page, request);
     await page.goto("/pricing#ios");
 
     await page.getByRole("button", { name: "Get iOS Access" }).click();
@@ -39,7 +40,7 @@ test.describe("Checkout Flow (Test Mode)", () => {
   });
 
   test("Android checkout button reaches Stripe", async ({ page, request }) => {
-    await loginViaMagicLink(page, request, "/pricing");
+    await loginViaMagicLink(page, request);
     await page.goto("/pricing#android");
 
     await page.getByRole("button", { name: "Get Android Access" }).click();
@@ -47,7 +48,7 @@ test.describe("Checkout Flow (Test Mode)", () => {
   });
 
   test("Bundle checkout button reaches Stripe", async ({ page, request }) => {
-    await loginViaMagicLink(page, request, "/pricing");
+    await loginViaMagicLink(page, request);
     await page.goto("/pricing#bundle");
 
     await page.getByRole("button", { name: "Get Bundle Access" }).click();

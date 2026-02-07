@@ -1,4 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '.env.local' });
 
 export default defineConfig({
   testDir: './tests',
@@ -8,7 +11,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:3002',
+    baseURL: process.env.E2E_BASE_URL || 'http://127.0.0.1:3002',
     trace: 'on-first-retry',
   },
 
@@ -19,9 +22,9 @@ export default defineConfig({
     },
   ],
 
-  webServer: process.env.CI ? undefined : {
-    command: 'PORT=3002 npm run dev',
-    url: 'http://localhost:3002',
+  webServer: process.env.CI || process.env.E2E_NO_WEBSERVER ? undefined : {
+    command: 'HOSTNAME=127.0.0.1 PORT=3002 npm run dev -- -H 127.0.0.1',
+    url: 'http://127.0.0.1:3002',
     reuseExistingServer: !process.env.CI,
   },
 });

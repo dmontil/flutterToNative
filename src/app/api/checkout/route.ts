@@ -6,7 +6,7 @@ import { getPriceId, ProductId, Currency } from "@/lib/products";
 // Helper function to get Stripe instance
 function getStripe() {
     if (!process.env.STRIPE_SECRET_KEY) {
-        throw new Error("STRIPE_SECRET_KEY is not configured");
+        throw new Error("STRIPE_SECRET_KEY not configured");
     }
     return new Stripe(process.env.STRIPE_SECRET_KEY);
 }
@@ -85,8 +85,12 @@ export async function POST(req: Request) {
         });
 
         return NextResponse.json({ url: session.url });
-    } catch (error) {
+    } catch (error: any) {
         console.error("[STRIPE_ERROR]", error);
+        const message = error?.message || "Internal Error";
+        if (process.env.NODE_ENV !== "production") {
+            return new NextResponse(message, { status: 500 });
+        }
         return new NextResponse("Internal Error", { status: 500 });
     }
 }

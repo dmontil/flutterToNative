@@ -3,14 +3,7 @@
 import Link from "next/link";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
-import ArrowRight from "lucide-react/dist/esm/icons/arrow-right";
-import Code2 from "lucide-react/dist/esm/icons/code-2";
-import Layers from "lucide-react/dist/esm/icons/layers";
-import Zap from "lucide-react/dist/esm/icons/zap";
-import TrendingUp from "lucide-react/dist/esm/icons/trending-up";
-import Briefcase from "lucide-react/dist/esm/icons/briefcase";
-import ShieldCheck from "lucide-react/dist/esm/icons/shield-check";
-import BookOpen from "lucide-react/dist/esm/icons/book-open";
+import { ArrowRight, Code2, TrendingUp, Briefcase, ShieldCheck, BookOpen } from "lucide-react";
 import { FAQSection } from "@/components/ui/faq-section";
 import { usePremium } from "@/hooks/use-premium";
 

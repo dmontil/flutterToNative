@@ -3,10 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, memo } from "react";
-import Menu from "lucide-react/dist/esm/icons/menu";
-import X from "lucide-react/dist/esm/icons/x";
-import User from "lucide-react/dist/esm/icons/user";
-import Crown from "lucide-react/dist/esm/icons/crown";
+import { Menu, X, User, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/components/auth/user-provider";
 import { signOut } from "@/lib/supabase-client";

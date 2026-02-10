@@ -4,15 +4,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
-import ArrowRight from "lucide-react/dist/esm/icons/arrow-right";
-import BookOpen from "lucide-react/dist/esm/icons/book-open";
-import Layers from "lucide-react/dist/esm/icons/layers";
-import Code2 from "lucide-react/dist/esm/icons/code-2";
-import Target from "lucide-react/dist/esm/icons/target";
-import TestTube from "lucide-react/dist/esm/icons/test-tube";
-import Widget from "lucide-react/dist/esm/icons/widget";
-import Crown from "lucide-react/dist/esm/icons/crown";
-import TrendingUp from "lucide-react/dist/esm/icons/trending-up";
+import { ArrowRight, BookOpen, Layers, Code2, Target, TestTube, Crown, TrendingUp, Brain as BrainIcon, Grid3x3 } from "lucide-react";
 import { usePremium } from "@/hooks/use-premium";
 import { usePlatform } from "@/hooks/use-platform";
 
@@ -22,7 +14,7 @@ const PLATFORM_CONTENT = {
       href: "/mental-model",
       title: "Concepts & Mental Models",
       description: "Map your Flutter knowledge to iOS patterns. Think in Swift, not Dart.",
-      icon: <Brain className="h-6 w-6 text-indigo-500" />,
+      icon: <BrainIcon className="h-6 w-6 text-indigo-500" />,
       isFree: true,
     },
     {
@@ -64,7 +56,7 @@ const PLATFORM_CONTENT = {
       href: "/widget-map",
       title: "Widget Mapping",
       description: "Complete Flutter → SwiftUI widget reference.",
-      icon: <Widget className="h-6 w-6 text-indigo-500" />,
+      icon: <Grid3x3 className="h-6 w-6 text-indigo-500" />,
       isFree: true,
     },
   ],
@@ -115,7 +107,7 @@ const PLATFORM_CONTENT = {
       href: "/android/widget-map",
       title: "Widget Mapping",
       description: "Complete Flutter → Compose widget reference.",
-      icon: <Widget className="h-6 w-6 text-green-500" />,
+      icon: <Grid3x3 className="h-6 w-6 text-green-500" />,
       isFree: true,
     },
   ]

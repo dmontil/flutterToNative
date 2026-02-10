@@ -1,7 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Code2, Layers, Zap, TrendingUp, Briefcase, ShieldCheck, BookOpen } from "lucide-react";
+import ArrowRight from "lucide-react/dist/esm/icons/arrow-right";
+import Code2 from "lucide-react/dist/esm/icons/code-2";
+import Layers from "lucide-react/dist/esm/icons/layers";
+import Zap from "lucide-react/dist/esm/icons/zap";
+import TrendingUp from "lucide-react/dist/esm/icons/trending-up";
+import Briefcase from "lucide-react/dist/esm/icons/briefcase";
+import ShieldCheck from "lucide-react/dist/esm/icons/shield-check";
+import BookOpen from "lucide-react/dist/esm/icons/book-open";
 import { FAQSection } from "@/components/ui/faq-section";
 import { usePremium } from "@/hooks/use-premium";
 
@@ -38,7 +47,7 @@ export default function AndroidHome() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             {isLoggedIn && isPro ? (
-              <Link href="/dashboard">
+              <Link href="/android/mental-model">
                 <Button size="lg" className="h-12 px-8 text-base bg-green-600 hover:bg-green-700">
                   <BookOpen className="mr-2 h-4 w-4" />
                   Start Learning

@@ -26,7 +26,7 @@ export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [isLocal, setIsLocal] = useState(false);
     const { user, hasAccess } = useUser();
-    const { platform, isAndroid, isIos, isSelector } = usePlatform();
+    const { platform, isAndroid, isIos, isSelector, pathname } = usePlatform();
     
     useEffect(() => {
         setIsLocal(
@@ -44,9 +44,6 @@ export function Navbar() {
         { href: `${base}/components-ui`, label: "UI Lab" },
         { href: `${base}/architecture`, label: "Architecture" },
         { href: `${base}/interview`, label: "Interview Prep" },
-        { href: `${base}/feature-dive`, label: "Feature Deep Dive" },
-        { href: `${base}/testing`, label: "Testing" },
-        { href: `${base}/widget-map`, label: "Widget Mapping" },
     ];
     
     const hasPremium = isAndroid ? hasAccess('android_premium') || hasAccess('bundle_premium') : hasAccess('ios_premium') || hasAccess('bundle_premium');
@@ -89,15 +86,26 @@ export function Navbar() {
                             Android
                         </a>
                     </div>
-                    {navLinks.map((link) => (
+                    {navLinks.map((link) => {
+                        const isActive = pathname?.includes(link.href);
+                        return (
                         <Link
                             key={link.href}
                             href={link.href}
-                            className="hover:text-foreground transition-colors"
+                            className={cn(
+                                "text-sm font-medium transition-colors relative",
+                                isActive 
+                                    ? "text-foreground font-bold" 
+                                    : "text-muted-foreground hover:text-foreground"
+                            )}
                         >
                             {link.label}
+                            {isActive && (
+                                <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-current" />
+                            )}
                         </Link>
-                    ))}
+                    );
+                    })}
                 </div>
 
                 <div className="flex items-center gap-4">
@@ -167,16 +175,25 @@ export function Navbar() {
                             Android
                         </a>
                     </div>
-                    {navLinks.map((link) => (
+                    {navLinks.map((link) => {
+                        const isActive = pathname?.includes(link.href);
+                        return (
                         <Link
                             key={link.href}
                             href={link.href}
-                            className="text-lg font-medium py-2 border-b border-border/50"
+                            className={cn(
+                                "text-lg font-medium py-2 border-b border-border/50 relative",
+                                isActive ? "text-foreground font-bold" : "text-muted-foreground"
+                            )}
                             onClick={() => setIsOpen(false)}
                         >
                             {link.label}
+                            {isActive && (
+                                <span className="absolute -bottom-0 left-0 right-0 h-0.5 bg-current" />
+                            )}
                         </Link>
-                    ))}
+                    );
+                    })}
                     <div className="flex flex-col gap-3 pt-4">
                         {user ? (
                             <>

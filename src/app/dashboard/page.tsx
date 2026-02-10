@@ -136,6 +136,7 @@ function DashboardContent() {
   const { isPro, isLoggedIn } = usePremium();
   const { platform, isIos, isAndroid } = usePlatform();
   
+  // Default a iOS si no hay una plataforma clara
   const content = isAndroid ? PLATFORM_CONTENT.android : PLATFORM_CONTENT.ios;
   const platformColor = isAndroid ? "green" : "indigo";
   const platformName = isAndroid ? "Android" : "iOS";

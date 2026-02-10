@@ -2,12 +2,25 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
-import { Menu, X, User, Crown } from "lucide-react";
+import { useState, useEffect, memo } from "react";
+import Menu from "lucide-react/dist/esm/icons/menu";
+import X from "lucide-react/dist/esm/icons/x";
+import User from "lucide-react/dist/esm/icons/user";
+import Crown from "lucide-react/dist/esm/icons/crown";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/components/auth/user-provider";
 import { signOut } from "@/lib/supabase-client";
 import { usePlatform } from "@/hooks/use-platform";
+
+// Memoized premium badge to avoid unnecessary re-renders
+const PremiumBadge = memo(function PremiumBadge() {
+  return (
+    <div className="flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded-full">
+      <Crown className="h-3 w-3" />
+      <span>PRO</span>
+    </div>
+  );
+});
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -91,12 +104,7 @@ export function Navbar() {
                     <div className="hidden sm:flex items-center gap-4">
                         {user ? (
                             <>
-                                {hasPremium && (
-                                    <div className="flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded-full">
-                                        <Crown className="h-3 w-3" />
-                                        <span>PRO</span>
-                                    </div>
-                                )}
+                                {hasPremium && <PremiumBadge />}
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <User className="h-4 w-4" />
                                     <span className="hidden lg:inline">{user.email}</span>

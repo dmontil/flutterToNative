@@ -1,7 +1,18 @@
+"use client";
+
 import Link from "next/link";
+import { Suspense } from "react";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BookOpen, Layers, Code2, Target, TestTube, Widget, Crown, TrendingUp } from "lucide-react";
+import ArrowRight from "lucide-react/dist/esm/icons/arrow-right";
+import BookOpen from "lucide-react/dist/esm/icons/book-open";
+import Layers from "lucide-react/dist/esm/icons/layers";
+import Code2 from "lucide-react/dist/esm/icons/code-2";
+import Target from "lucide-react/dist/esm/icons/target";
+import TestTube from "lucide-react/dist/esm/icons/test-tube";
+import Widget from "lucide-react/dist/esm/icons/widget";
+import Crown from "lucide-react/dist/esm/icons/crown";
+import TrendingUp from "lucide-react/dist/esm/icons/trending-up";
 import { usePremium } from "@/hooks/use-premium";
 import { usePlatform } from "@/hooks/use-platform";
 
@@ -111,6 +122,17 @@ const PLATFORM_CONTENT = {
 };
 
 export default function DashboardPage() {
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navbar />
+      <Suspense fallback={<DashboardSkeleton />}>
+        <DashboardContent />
+      </Suspense>
+    </div>
+  );
+}
+
+function DashboardContent() {
   const { isPro, isLoggedIn } = usePremium();
   const { platform, isIos, isAndroid } = usePlatform();
   
@@ -119,60 +141,97 @@ export default function DashboardPage() {
   const platformName = isAndroid ? "Android" : "iOS";
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
+    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+      <div className={`absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-${platformColor}-500/20 via-background to-background`} />
 
-      <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
-        <div className={`absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-${platformColor}-500/20 via-background to-background`} />
+      <div className="container mx-auto px-4 text-center">
+        {isLoggedIn && isPro && (
+          <div className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm font-bold text-amber-500 mb-6">
+            <Crown className="h-4 w-4 mr-2" />
+            Premium Access Active
+          </div>
+        )}
 
-        <div className="container mx-auto px-4 text-center">
-          {isLoggedIn && isPro && (
-            <div className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-4 py-2 text-sm font-bold text-amber-500 mb-6">
-              <Crown className="h-4 w-4 mr-2" />
-              Premium Access Active
-            </div>
-          )}
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+          Your {platformName} Career <br className="hidden md:block" />
+          <span className={`text-${platformColor}-500`}>Learning Hub</span>
+        </h1>
 
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-            Your {platformName} Career <br className="hidden md:block" />
-            <span className={`text-${platformColor}-500`}>Learning Hub</span>
-          </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
+          Everything you need to go from Flutter senior to {platformName} senior.
+          <br />Master the architecture, crush the interviews, ship production code.
+        </p>
 
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-            Everything you need to go from Flutter senior to {platformName} senior.
-            <br />Master the architecture, crush the interviews, ship production code.
-          </p>
-
+        <Suspense fallback={<CardsGridSkeleton />}>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {content.map((item, index) => (
-              <ContentCard
-                key={item.href}
-                {...item}
-                isUnlocked={isPro || item.isFree}
-                index={index}
-                platformColor={platformColor}
-              />
+              <Suspense key={item.href} fallback={<CardSkeleton />}>
+                <ContentCard
+                  {...item}
+                  isUnlocked={isPro || item.isFree}
+                  index={index}
+                  platformColor={platformColor}
+                />
+              </Suspense>
             ))}
           </div>
+        </Suspense>
 
-          {!isPro && (
-            <div className="mt-16 max-w-2xl mx-auto">
-              <div className="bg-gradient-to-r from-indigo-500/10 to-green-500/10 border border-border rounded-2xl p-8 text-center">
-                <h3 className="text-2xl font-bold mb-4">Unlock All Content</h3>
-                <p className="text-muted-foreground mb-6">
-                  Get access to Architecture, Interview Prep, Feature Deep Dives, and Testing Strategies.
-                </p>
-                <Link href="/pricing">
-                  <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-green-600 hover:from-indigo-700 hover:to-green-700">
-                    Get Premium Access — $19.99
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
+        {!isPro && (
+          <div className="mt-16 max-w-2xl mx-auto">
+            <div className="bg-gradient-to-r from-indigo-500/10 to-green-500/10 border border-border rounded-2xl p-8 text-center">
+              <h3 className="text-2xl font-bold mb-4">Unlock All Content</h3>
+              <p className="text-muted-foreground mb-6">
+                Get access to Architecture, Interview Prep, Feature Deep Dives, and Testing Strategies.
+              </p>
+              <Link href="/pricing">
+                <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-green-600 hover:from-indigo-700 hover:to-green-700">
+                  Get Premium Access — $19.99
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
-          )}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+// Skeleton components for better UX during loading
+function DashboardSkeleton() {
+  return (
+    <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden">
+      <div className="container mx-auto px-4 text-center">
+        <div className="h-12 w-64 bg-muted animate-pulse mx-auto mb-8 rounded" />
+        <div className="h-8 w-96 bg-muted animate-pulse mx-auto mb-12 rounded" />
+        <CardsGridSkeleton />
+      </div>
+    </section>
+  );
+}
+
+function CardsGridSkeleton() {
+  return (
+    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      {[...Array(6)].map((_, i) => (
+        <CardSkeleton key={i} />
+      ))}
+    </div>
+  );
+}
+
+function CardSkeleton() {
+  return (
+    <div className="rounded-2xl border border-border bg-card p-6 text-left animate-pulse">
+      <div className="flex items-start gap-4 mb-4">
+        <div className="h-12 w-12 rounded-lg bg-muted flex-shrink-0" />
+        <div className="flex-1">
+          <div className="h-5 w-3/4 bg-muted rounded mb-2" />
+          <div className="h-4 w-full bg-muted rounded" />
         </div>
-      </section>
+      </div>
+      <div className="h-10 w-full bg-muted rounded" />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { useUser } from "@/components/auth/user-provider";
 import { usePlatform } from "@/hooks/use-platform";
 

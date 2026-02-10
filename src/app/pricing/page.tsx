@@ -22,7 +22,10 @@ export default function PricingPage() {
 
     const onCheckout = async (productId: ProductId) => {
         if (!user) {
-            router.push("/login?redirect=/pricing");
+            // Preserve current URL with hash for redirect after login
+            const currentUrl = window.location.href;
+            const redirectPath = currentUrl.replace(window.location.origin, "");
+            router.push(`/login?redirect=${encodeURIComponent(redirectPath)}`);
             return;
         }
 

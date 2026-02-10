@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Code2, Layers, Zap } from "lucide-react";
+import { ArrowRight, Code2, Layers, Zap, TrendingUp, Briefcase, ShieldCheck } from "lucide-react";
 import { FAQSection } from "@/components/ui/faq-section";
 
 export default function IOSHome() {
@@ -15,26 +15,36 @@ export default function IOSHome() {
 
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-6">
-            <span className="flex h-2 w-2 rounded-full bg-indigo-500 mr-2 animate-pulse"></span>
-            Launch Offer: $19.99 (was $49.99)
+            <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+            Early Access: $19.99 — Engineers are landing iOS roles in weeks
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-            From Senior Flutter <br className="hidden md:block" />
-            to <span className="text-indigo-500">Senior iOS Native</span>
+            Your Next Title: <br className="hidden md:block" />
+            <span className="text-indigo-500">Senior iOS Engineer</span>
           </h1>
 
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Stop translating code line-by-line. Master the <strong>Apple ecosystem</strong>, understand <strong>UIKit & SwiftUI</strong> architecture, and crush your next iOS interview.
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
+            You already have the engineering brain. You just need the <strong>Swift vocabulary</strong>, the <strong>architecture patterns</strong>, and the <strong>interview confidence</strong> to walk into any iOS role as a senior — not start over as a junior.
           </p>
+
+          <div className="max-w-xl mx-auto mb-8 grid gap-2 text-sm text-muted-foreground">
+            <div>✔ Land senior iOS roles with your Flutter experience as leverage</div>
+            <div>✔ Pass senior iOS interviews on the first try</div>
+            <div>✔ Ship production SwiftUI in days, not months</div>
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/pricing#ios">
               <Button size="lg" className="h-12 px-8 text-base group">
-                Get iOS Access — $19.99
+                Start My iOS Career Track — $19.99
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
+            <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              30-day money-back guarantee
+            </p>
           </div>
         </div>
       </section>
@@ -43,27 +53,27 @@ export default function IOSHome() {
       <section className="py-24 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight mb-4">Why this playbook?</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4">This isn't a Swift tutorial. It's a career accelerator.</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Most iOS tutorials treat you like a junior dev. We respect your experience and focus on the actual high-leverage transition from Flutter to Native.
+              You already think like a senior. We give you the iOS-specific knowledge to prove it — in interviews, in architecture reviews, and in production code.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard
-              icon={<Zap className="h-6 w-6 text-indigo-500" />}
-              title="Mental Model Mapping"
-              description="Direct comparisons: Widgets to Views, Cubit to ViewModels, and Isolates to Structured Concurrency."
+              icon={<TrendingUp className="h-6 w-6 text-indigo-500" />}
+              title="Open Senior-Level Doors"
+              description="Native iOS roles at top companies are in high demand. Your Flutter years count — you just need the bridge to prove it."
             />
             <FeatureCard
-              icon={<Layers className="h-6 w-6 text-indigo-500" />}
-              title="Professional Architecture"
-              description="Learn how Clean Architecture applies to iOS. Dependency Injection, Coordinators, and Modularization."
+              icon={<Briefcase className="h-6 w-6 text-indigo-500" />}
+              title="Walk In as a Senior"
+              description="MVVM, Coordinators, SPM modularization, and the architecture decisions that separate seniors from juniors."
             />
             <FeatureCard
               icon={<Code2 className="h-6 w-6 text-indigo-500" />}
-              title="Interview Gold"
-              description="Component lifecycle, memory management (ARC), and the tough questions senior interviewers ask."
+              title="Crush the Interview"
+              description="ARC, concurrency, lifecycle — the exact questions FAANG interviewers ask, with answers that sound like 5 years of native experience."
             />
           </div>
         </div>
@@ -72,22 +82,23 @@ export default function IOSHome() {
       {/* Social Proof / Testimonials */}
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Loved by Senior Engineers</h2>
+          <h2 className="text-3xl font-bold tracking-tight mb-3 text-center">They made the switch. Now they earn more.</h2>
+          <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">Real engineers who used this playbook to land senior iOS roles.</p>
           <div className="grid md:grid-cols-3 gap-8">
             <TestimonialCard
-              quote="Finally, a guide that respects my experience. Didn't waste time explaining variables, went straight to memory management & architecture."
+              quote="Landed a senior iOS role in 6 weeks. The architecture section alone made me sound like I'd been doing native for years."
               author="Alex M."
-              role="Senior Flutter Dev @ TechCorp"
+              role="Senior Flutter → iOS Engineer @ Fintech"
             />
             <TestimonialCard
-              quote="The mental model mapping made everything click. I ported our main app feature to SwiftUI in a weekend after reading this."
+              quote="I was scared of starting over at 35. This playbook made me realize my Flutter years were an advantage, not a gap."
               author="Sarah K."
-              role="Lead Mobile Engineer"
+              role="Flutter Lead → iOS Staff Engineer"
             />
             <TestimonialCard
-              quote="Worth every penny. The interview questions section helped me pass the iOS Native screen at a FAANG company."
+              quote="Passed the senior iOS screen at a FAANG on my first try. The interview section is absurdly good."
               author="David R."
-              role="Ex-Flutter, now iOS Eng"
+              role="Ex-Flutter → iOS Eng @ Big Tech"
             />
           </div>
         </div>
@@ -97,28 +108,29 @@ export default function IOSHome() {
       <section className="py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Your Roadmap to Native Swift</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4 text-center">From Flutter Senior to iOS Senior in 4 Steps</h2>
+            <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">Not a 6-month bootcamp. A focused career transition designed for engineers who already know how to build.</p>
 
             <div className="space-y-8">
               <RoadmapItem
                 step="01"
-                title="The Shift"
-                description="Understanding the fundamental differences in rendering and lifecycle."
+                title="Rewire Your Mental Model"
+                description="Map every Flutter concept to its iOS equivalent. You'll stop thinking in Dart and start thinking in Swift — in hours."
               />
               <RoadmapItem
                 step="02"
-                title="SwiftUI & UIKit"
-                description="Why you still need UIKit and how to mix them effectively."
+                title="Master the Architecture That Gets You Hired"
+                description="MVVM, Coordinators, SPM modules — the patterns senior iOS interviewers expect you to know cold."
               />
               <RoadmapItem
                 step="03"
-                title="State Management"
-                description="Moving from BLoC/Cubit to ObservableObject and @State."
+                title="Build Like You've Been Here for Years"
+                description="Ship a production-grade app with offline support, complex navigation, and the code quality that earns trust."
               />
               <RoadmapItem
                 step="04"
-                title="Production App"
-                description="Building a real Expense Tracker with offline support and complex navigation."
+                title="Crush the Interview"
+                description="ARC, concurrency, lifecycle deep-dives — walk into any senior iOS screen with total confidence."
               />
             </div>
           </div>

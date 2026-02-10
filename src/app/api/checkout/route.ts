@@ -10,7 +10,6 @@ function getStripe() {
     }
     // Clean the key by trimming any whitespace/newlines
     const cleanKey = process.env.STRIPE_SECRET_KEY.trim();
-    console.log('[getStripe] Key length:', cleanKey.length, 'starts with:', cleanKey.substring(0, 10));
     return new Stripe(cleanKey);
 }
 
@@ -27,16 +26,11 @@ function normalizeOrigin(value?: string | null): string | null {
 
 export async function POST(req: Request) {
     try {
-        console.log('[Checkout API] Starting checkout request');
-        
         const stripe = getStripe();
         const authHeader = req.headers.get("Authorization");
         const token = authHeader?.replace("Bearer ", "");
 
-        console.log('[Checkout API] Auth header present:', !!authHeader);
-
         if (!token) {
-            console.log('[Checkout API] No token provided');
             return new NextResponse("Unauthorized", { status: 401 });
         }
 
@@ -48,11 +42,8 @@ export async function POST(req: Request) {
         const { data: { user }, error } = await supabase.auth.getUser(token);
 
         if (error || !user) {
-            console.log('[Checkout API] User auth failed:', error?.message);
             return new NextResponse("Unauthorized", { status: 401 });
         }
-
-        console.log('[Checkout API] User authenticated:', user.email);
 
         const requestBody = await req.json().catch(() => ({ 
             productId: "ios_playbook" as ProductId,
@@ -60,37 +51,18 @@ export async function POST(req: Request) {
         }));
 
         const { productId, currency = "USD" } = requestBody;
-        console.log('[Checkout API] Request body:', { productId, currency });
 
-        // Validate productId
         if (!["ios_playbook", "android_playbook", "bundle_playbook"].includes(productId)) {
-            console.log('[Checkout API] Invalid product ID:', productId);
             return new NextResponse("Invalid product ID", { status: 400 });
         }
-        // Validate currency
         if (!["USD", "EUR"].includes(currency)) {
-            console.log('[Checkout API] Invalid currency:', currency);
             return new NextResponse("Invalid currency", { status: 400 });
         }
 
-        // Debug environment variables
-        console.log('[Checkout API] Environment check:', {
-            hasStripeKey: !!process.env.STRIPE_SECRET_KEY,
-            hasIosUsd: !!process.env.STRIPE_PRICE_ID_IOS_USD,
-            hasIosEur: !!process.env.STRIPE_PRICE_ID_IOS_EUR,
-            hasAndroidUsd: !!process.env.STRIPE_PRICE_ID_ANDROID_USD,
-            hasAndroidEur: !!process.env.STRIPE_PRICE_ID_ANDROID_EUR,
-            hasBundleUsd: !!process.env.STRIPE_PRICE_ID_BUNDLE_USD,
-            hasBundleEur: !!process.env.STRIPE_PRICE_ID_BUNDLE_EUR,
-        });
-
-        // Get the appropriate price ID for the product and currency
         const stripePriceId = getPriceId(productId as ProductId, currency as Currency);
-        console.log('[Checkout API] Price ID for', productId, currency, ':', stripePriceId);
 
         if (!stripePriceId) {
-            console.error(`[Checkout API] Price ID not found for product: ${productId}, currency: ${currency}`);
-            console.error('[Checkout API] Available env vars:', Object.keys(process.env).filter(k => k.includes('STRIPE')));
+            console.error(`[Checkout] Price ID not found for ${productId}/${currency}`);
             return new NextResponse("Price configuration error", { status: 500 });
         }
 
@@ -100,18 +72,26 @@ export async function POST(req: Request) {
         const envSite = normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL);
         const envIos = normalizeOrigin(process.env.NEXT_PUBLIC_IOS_SITE_URL);
         const envAndroid = normalizeOrigin(process.env.NEXT_PUBLIC_ANDROID_SITE_URL);
-        const envE2E = normalizeOrigin(process.env.E2E_BASE_URL);
-
-        const allowedOrigins = new Set([envSite, envIos, envAndroid, envE2E].filter(Boolean));
+        const allowedOrigins = new Set([envSite, envIos, envAndroid].filter(Boolean));
         const baseUrl =
             (originHeader && allowedOrigins.has(originHeader) ? originHeader : null) ||
             (refererHeader && allowedOrigins.has(refererHeader) ? refererHeader : null) ||
-            envSite ||
-            envE2E ||
-            "http://localhost:3002";
+            envSite;
 
-        console.log('[Checkout API] Using baseUrl:', baseUrl);
-        console.log('[Checkout API] Creating Stripe session with price:', stripePriceId);
+        if (!baseUrl) {
+            return new NextResponse("Site URL not configured", { status: 500 });
+        }
+
+        // Determine success URL based on product
+        let successUrl;
+        if (productId === 'android_playbook') {
+            successUrl = `${baseUrl}/android/components-ui?success=true`;
+        } else if (productId === 'bundle_playbook') {
+            successUrl = `${baseUrl}/components-ui?success=true`;
+        } else {
+            // ios_playbook
+            successUrl = `${baseUrl}/components-ui?success=true`;
+        }
 
         const sessionParams = {
             line_items: [{
@@ -119,7 +99,7 @@ export async function POST(req: Request) {
                 quantity: 1,
             }],
             mode: "payment" as const,
-            success_url: `${baseUrl}/pricing?success=true`,
+            success_url: successUrl,
             cancel_url: `${baseUrl}/pricing?canceled=true`,
             metadata: {
                 userId: user.id,
@@ -130,23 +110,12 @@ export async function POST(req: Request) {
             customer_email: user.email,
         };
 
-        console.log('[Checkout API] Session params:', JSON.stringify(sessionParams, null, 2));
-
         let session;
         try {
-            console.log('[Checkout API] Calling stripe.checkout.sessions.create...');
             session = await stripe.checkout.sessions.create(sessionParams);
-            console.log('[Checkout API] Stripe session created successfully:', session.id, 'URL:', session.url);
         } catch (stripeError: any) {
-            console.error('[Checkout API] Stripe session creation failed:', stripeError);
-            console.error('[Checkout API] Stripe error details:', {
-                type: stripeError.type,
-                code: stripeError.code,
-                message: stripeError.message,
-                param: stripeError.param,
-                statusCode: stripeError.statusCode
-            });
-            return new NextResponse(JSON.stringify({ error: 'Stripe session creation failed', details: stripeError.message }), { 
+            console.error('[Checkout] Stripe error:', stripeError.code, stripeError.message);
+            return new NextResponse(JSON.stringify({ error: 'Payment session creation failed' }), { 
                 status: 400,
                 headers: { 'Content-Type': 'application/json' }
             });

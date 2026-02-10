@@ -54,18 +54,8 @@ export default function ComponentsPage() {
 function ComponentsContent() {
     const searchParams = useSearchParams();
     const currentTopic = searchParams.get("topic") || "layout-flex";
-    const { hasAccess, user, entitlements, isLoading } = useUser();
+    const { hasAccess, isLoading } = useUser();
     const isPro = hasAccess('ios_premium');
-    
-    console.log('[ComponentsPage] 🔍 Current state:', {
-        hasUser: !!user,
-        userEmail: user?.email,
-        entitlements,
-        isLoading,
-        isPro,
-        hasAccessResult: hasAccess('ios_premium'),
-        currentTopic
-    });
 
     const topic = COMPONENT_TOPICS.find(t => t.id === currentTopic) || COMPONENT_TOPICS[0];
 
@@ -309,7 +299,7 @@ Button { } label: {
             {/* --- CONTROLS --- */}
 
             {currentTopic === "control-input" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="TextField"
                         snippets={[
@@ -330,7 +320,7 @@ Button { } label: {
             )}
 
             {currentTopic === "control-switch" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Switch / Checkbox"
                         snippets={[
@@ -348,7 +338,7 @@ Button { } label: {
             )}
 
             {currentTopic === "control-slider" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Slider"
                         snippets={[
@@ -365,7 +355,7 @@ Button { } label: {
             )}
 
             {currentTopic === "control-picker" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Pickers / Dropdowns"
                         snippets={[
@@ -389,7 +379,7 @@ Button { } label: {
             {/* --- NAVIGATION --- */}
 
             {currentTopic === "nav-push" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Navigation (Stack)"
                         snippets={[
@@ -407,7 +397,7 @@ NavigationStack {
             )}
 
             {currentTopic === "nav-tabs" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Bottom Tab Bar"
                         snippets={[
@@ -431,7 +421,7 @@ NavigationStack {
             )}
 
             {currentTopic === "nav-modals" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Modal Sheets"
                         snippets={[
@@ -450,7 +440,7 @@ NavigationStack {
             )}
 
             {currentTopic === "nav-alert" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Alert Logic"
                         snippets={[
@@ -471,7 +461,7 @@ NavigationStack {
             {/* --- FEEDBACK --- */}
 
             {currentTopic === "feedback-progress" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Loading Indicators"
                         snippets={[
@@ -485,7 +475,7 @@ NavigationStack {
             {/* --- ADVANCED UI --- */}
 
             {currentTopic === "advanced-anim" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <div className="space-y-12">
                         <CodeComparison
                             title="Implicit Animations"
@@ -522,7 +512,7 @@ NavigationStack {
             )}
 
             {currentTopic === "advanced-gestures" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Gestures"
                         snippets={[
@@ -546,7 +536,7 @@ NavigationStack {
             )}
 
             {currentTopic === "advanced-paint" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Custom Painting"
                         snippets={[
@@ -569,7 +559,7 @@ Circle().fill(.red).frame(width: 20)` }
             )}
 
             {currentTopic === "advanced-platform" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Platform Integration (Permissions)"
                         snippets={[

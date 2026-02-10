@@ -12,17 +12,9 @@ interface PremiumLockProps {
 }
 
 export function PremiumLock({ isUnlocked, children, blurAmount = "md" }: PremiumLockProps) {
-    console.log('[PremiumLock] 🔐 Lock state:', {
-        isUnlocked,
-        shouldShowLock: !isUnlocked
-    });
-    
     if (isUnlocked) {
-        console.log('[PremiumLock] ✅ Content unlocked, rendering children');
         return <>{children}</>;
     }
-    
-    console.log('[PremiumLock] 🔒 Content locked, rendering lock overlay');
 
     return (
         <div className="relative group">
@@ -30,9 +22,9 @@ export function PremiumLock({ isUnlocked, children, blurAmount = "md" }: Premium
             <div
                 className={cn(
                     "transition-all duration-500 select-none pointer-events-none",
-                    blurAmount === "sm" && "blur-sm opacity-80",
-                    blurAmount === "md" && "blur-md opacity-60",
-                    blurAmount === "lg" && "blur-xl opacity-40",
+                    blurAmount === "sm" && "blur-sm opacity-90",
+                    blurAmount === "md" && "blur-md opacity-80",
+                    blurAmount === "lg" && "blur-xl opacity-60",
                     "grayscale-[0.5]"
                 )}
             >
@@ -40,7 +32,7 @@ export function PremiumLock({ isUnlocked, children, blurAmount = "md" }: Premium
             </div>
 
             {/* The Lock Overlay */}
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-20 bg-gradient-to-b from-transparent via-background/50 to-background/90">
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-start pt-20 bg-gradient-to-b from-transparent via-background/30 to-background/70">
                 <div className="bg-card/90 backdrop-blur-md border border-indigo-500/30 p-8 rounded-2xl shadow-2xl text-center max-w-sm mx-4 transform transition-all hover:scale-105">
                     <div className="h-12 w-12 bg-indigo-500 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                         <Lock className="h-6 w-6 text-white" />

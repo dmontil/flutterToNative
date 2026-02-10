@@ -48,18 +48,8 @@ export default function AndroidComponentsPage() {
 function AndroidComponentsContent() {
     const searchParams = useSearchParams();
     const currentTopic = searchParams.get("topic") || "layout-flex";
-    const { hasAccess, user, entitlements, isLoading } = useUser();
+    const { hasAccess, isLoading } = useUser();
     const isPro = hasAccess('android_premium');
-
-    console.log('[AndroidComponentsPage] 🔍 Current state:', {
-        hasUser: !!user,
-        userEmail: user?.email,
-        entitlements,
-        isLoading,
-        isPro,
-        hasAccessResult: hasAccess('android_premium'),
-        currentTopic
-    });
 
     const topic = COMPONENT_TOPICS.find(t => t.id === currentTopic) || COMPONENT_TOPICS[0];
 
@@ -283,7 +273,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "control-input" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="TextField"
                         snippets={[
@@ -302,7 +292,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "control-switch" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Switch"
                         snippets={[
@@ -320,7 +310,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "control-slider" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Slider"
                         snippets={[
@@ -338,7 +328,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "control-picker" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="DatePicker"
                         snippets={[
@@ -358,7 +348,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "nav-push" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Navigation (Push)"
                         snippets={[
@@ -373,7 +363,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "nav-tabs" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Tabs"
                         snippets={[
@@ -395,7 +385,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "nav-modals" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Modals & Sheets"
                         snippets={[
@@ -413,7 +403,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "nav-alert" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Alerts & Dialogs"
                         snippets={[
@@ -436,7 +426,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "feedback-progress" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Progress / Loading"
                         snippets={[
@@ -448,7 +438,7 @@ LazyVerticalGrid(columns = GridCells.Fixed(2)) {
             )}
 
             {currentTopic === "advanced-anim" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Animations"
                         snippets={[
@@ -464,7 +454,7 @@ Box(Modifier.width(width))` }
             )}
 
             {currentTopic === "advanced-gestures" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Gestures"
                         snippets={[
@@ -483,7 +473,7 @@ Box(Modifier.width(width))` }
             )}
 
             {currentTopic === "advanced-paint" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Custom Painting"
                         snippets={[
@@ -499,7 +489,7 @@ Box(Modifier.width(width))` }
             )}
 
             {currentTopic === "advanced-platform" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <CodeComparison
                         title="Platform APIs"
                         snippets={[

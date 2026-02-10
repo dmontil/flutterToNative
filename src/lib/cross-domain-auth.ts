@@ -41,7 +41,6 @@ export async function syncSessionToCurrentDomain(): Promise<boolean> {
         // Check if we already have a session in localStorage
         const existingSession = localStorage.getItem(storageKey);
         if (existingSession) {
-            console.log('[CrossDomainAuth] ✅ Session already exists in current domain');
             return true;
         }
         
@@ -58,7 +57,6 @@ export async function syncSessionToCurrentDomain(): Promise<boolean> {
                 
                 // Store the session in localStorage for current subdomain
                 localStorage.setItem(storageKey, sessionData);
-                console.log('[CrossDomainAuth] ✅ Session synced from cookies to localStorage');
                 
                 // Trigger a Supabase auth state change instead of full reload
                 // This will update the UI without losing navigation state
@@ -71,15 +69,12 @@ export async function syncSessionToCurrentDomain(): Promise<boolean> {
                 
                 return true;
             } catch (error) {
-                console.warn('[CrossDomainAuth] ⚠️ Invalid session data in cookies', error);
             }
         }
         
-        console.log('[CrossDomainAuth] ℹ️ No session found in cookies');
         return false;
         
     } catch (error) {
-        console.error('[CrossDomainAuth] ❌ Error syncing session:', error);
         return false;
     }
 }
@@ -102,8 +97,6 @@ export function setSessionCookie(sessionData: any): void {
     
     const cookieValue = `${storageKey}=${encodeURIComponent(sessionJson)}; path=/; SameSite=Lax; Max-Age=86400${cookieDomain ? `; domain=${cookieDomain}; Secure` : ''}`;
     document.cookie = cookieValue;
-    
-    console.log('[CrossDomainAuth] 🍪 Session cookie set for domain:', cookieDomain || 'localhost');
 }
 
 export function clearSessionCookies(): void {
@@ -123,6 +116,4 @@ export function clearSessionCookies(): void {
     document.cookie = `${storageKey}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT${cookieDomain ? `; domain=${cookieDomain}` : ''}`;
     document.cookie = `${storageKey}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     document.cookie = `${storageKey}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=${mainDomain || ''}`;
-    
-    console.log('[CrossDomainAuth] 🧹 Session cookies cleared');
 }

@@ -3,8 +3,12 @@
 import { Navbar } from "@/components/ui/navbar";
 import { CodeComparison } from "@/components/ui/code-comparison";
 import { TestTube, ShieldCheck, ArrowRight } from "lucide-react";
+import { PremiumLock } from "@/components/ui/premium-lock";
+import { useUser } from "@/components/auth/user-provider";
 
 export default function AndroidTestingPage() {
+    const { hasAccess, isLoading } = useUser();
+    const isPro = hasAccess('android_premium');
     return (
         <div className="min-h-screen bg-background">
             <Navbar />
@@ -70,6 +74,7 @@ class LoginViewModelTest {
                     />
                 </section>
 
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                 <section className="mb-20">
                     <div className="flex items-center gap-4 mb-6">
                         <ShieldCheck className="h-8 w-8 text-green-500" />
@@ -91,6 +96,7 @@ class LoginViewModelTest {
                         </pre>
                     </div>
                 </section>
+                </PremiumLock>
 
                 <div className="flex justify-between items-center py-8 border-t border-border">
                     <div className="text-sm text-muted-foreground">

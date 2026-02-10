@@ -25,22 +25,9 @@ export function SessionSync() {
                 // Check localStorage
                 const localData = localStorage.getItem(storageKey);
 
-                // Log current state for debugging
-                console.log('[SessionSync] Checking session state:', {
-                    hasLocalData: !!localData,
-                    currentDomain: window.location.hostname,
-                    storageKey
-                });
-
-                // If we don't have local data, try to sync from cookies
                 if (!localData) {
-                    console.log('[SessionSync] 🔄 No local session found, attempting to sync from cookies...');
                     const synced = await syncSessionToCurrentDomain();
-                    
-                    if (synced) {
-                        console.log('[SessionSync] ✅ Session synced successfully');
-                        return;
-                    }
+                    if (synced) return;
                 }
 
                 // If we have local data, also set it as a cookie for other subdomains
@@ -54,18 +41,14 @@ export function SessionSync() {
                         if (session && !error) {
                             // Set cookie for other subdomains
                             setSessionCookie(sessionData);
-                            console.log('[SessionSync] 🍪 Session cookie set for cross-subdomain access');
                         } else if (error) {
-                            console.warn('[SessionSync] ⚠️ Session invalid, clearing local data');
                             localStorage.removeItem(storageKey);
                         }
                     } catch (error) {
-                        console.warn('[SessionSync] ⚠️ Invalid session data in localStorage', error);
                     }
                 }
 
             } catch (err) {
-                console.error('[SessionSync] Error syncing session:', err);
             }
         };
 
@@ -85,7 +68,6 @@ export function SessionSync() {
         // Listen for storage changes from other tabs/windows
         const handleStorageChange = (e: StorageEvent) => {
             if (e.key && (e.key.includes('supabase') || e.key.includes('sb-'))) {
-                console.log('[SessionSync] 🔄 Storage change detected, syncing...');
                 syncSession();
             }
         };
@@ -95,7 +77,6 @@ export function SessionSync() {
         // Listen for visibility changes (when user switches back to tab)
         const handleVisibilityChange = () => {
             if (!document.hidden && syncAttempted.current) {
-                console.log('[SessionSync] 🔄 Tab became visible, syncing session...');
                 syncSession();
             }
         };

@@ -7,17 +7,8 @@ import { useUser } from "@/components/auth/user-provider";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function AndroidFeatureDivePage() {
-    const { hasAccess, user, entitlements, isLoading } = useUser();
+    const { hasAccess, isLoading } = useUser();
     const isPro = hasAccess('android_premium');
-
-    console.log('[AndroidFeatureDivePage] 🔍 Current state:', {
-        hasUser: !!user,
-        userEmail: user?.email,
-        entitlements,
-        isLoading,
-        isPro,
-        hasAccessResult: hasAccess('android_premium')
-    });
 
     return (
         <div className="min-h-screen bg-background">
@@ -101,7 +92,7 @@ abstract class CreateExpenseUseCase {
                     />
                 </section>
 
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <section className="mb-20">
                         <div className="flex items-center gap-4 mb-6">
                             <span className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500 font-bold text-white">2</span>

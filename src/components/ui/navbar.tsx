@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/components/auth/user-provider";
@@ -11,14 +11,19 @@ import { usePathname } from "next/navigation";
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isLocal, setIsLocal] = useState(false);
     const { user } = useUser();
     const pathname = usePathname();
     const isAndroid = pathname?.startsWith("/android");
     const isSelector = pathname === "/";
     const base = isAndroid ? "/android" : "";
-    const isLocal = typeof window !== "undefined" && (
-        window.location.host.includes("localhost") || window.location.host.includes("127.0.0.1")
-    );
+    
+    useEffect(() => {
+        setIsLocal(
+            window.location.host.includes("localhost") || window.location.host.includes("127.0.0.1")
+        );
+    }, []);
+    
     const iosHref = isLocal ? "/ios" : "https://ios.fluttertonative.pro";
     const androidHref = isLocal ? "/android" : "https://android.fluttertonative.pro";
 
@@ -30,25 +35,10 @@ export function Navbar() {
     ];
 
     const handleSignOut = async () => {
-        console.log('[Navbar] 🚪 Sign out button clicked');
-        console.log('[Navbar] 👤 Current user:', user?.email);
-        
         try {
-            console.log('[Navbar] 🚀 Starting sign out process...');
-            const result = await signOut();
-            console.log('[Navbar] 📥 Sign out result:', result);
-            
-            // Always force a full page reload for sign out
-            console.log('[Navbar] 🔄 Force reloading page to complete sign out...');
+            await signOut();
             window.location.href = "/";
-            
-        } catch (error: any) {
-            console.error('[Navbar] 💥 Sign out exception:', {
-                name: error?.name,
-                message: error?.message,
-                error
-            });
-            console.log('[Navbar] 🔄 Force reloading despite error...');
+        } catch {
             window.location.href = "/";
         }
     };

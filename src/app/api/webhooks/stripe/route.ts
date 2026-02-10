@@ -17,7 +17,13 @@ function getSupabase() {
   }
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    }
   );
 }
 
@@ -48,7 +54,7 @@ export async function POST(req: Request) {
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
-    console.error('Webhook signature verification failed:', err);
+    console.error('[WEBHOOK] Signature verification failed');
     return NextResponse.json(
       { error: 'Webhook signature verification failed' },
       { status: 400 }
@@ -60,15 +66,14 @@ export async function POST(req: Request) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
 
-      // Get the customer email and metadata
       const customerEmail = session.customer_email || session.customer_details?.email;
       const metadata = session.metadata;
       const customerId = session.customer as string;
 
-      if (!customerEmail || !metadata?.userId) {
-        console.error('Missing email or userId in session:', session.id);
+      if (!customerEmail) {
+        console.error('[WEBHOOK] Missing customer email in session:', session.id);
         return NextResponse.json(
-          { error: 'Missing required data' },
+          { error: 'Missing customer email' },
           { status: 400 }
         );
       }
@@ -86,23 +91,65 @@ export async function POST(req: Request) {
         entitlementsToAdd = ['ios_premium'];
       }
 
-      // Update user profile with entitlement
-      const { data: existingProfile, error: fetchError } = await supabase
-        .from('profiles')
-        .select('entitlements')
-        .eq('id', metadata.userId)
-        .single();
-
-      if (fetchError) {
-        console.error('Error fetching profile:', fetchError);
+      const { data: authUser, error: authError } = await supabase.auth.admin.listUsers();
+      
+      if (authError) {
+        console.error('[WEBHOOK] Error fetching auth users');
         return NextResponse.json(
-          { error: 'Failed to fetch user profile' },
+          { error: 'Failed to lookup user' },
           { status: 500 }
         );
       }
 
+      const user = authUser.users.find(u => u.email === customerEmail);
+      if (!user) {
+        console.error('[WEBHOOK] No auth user found for session:', session.id);
+        return NextResponse.json(
+          { error: 'User not found' },
+          { status: 400 }
+        );
+      }
+
+      const { data: existingProfile, error: fetchError } = await supabase
+        .from('profiles')
+        .select('entitlements')
+        .eq('id', user.id)
+        .single();
+
+      let currentEntitlements: string[] = [];
+
+      if (fetchError) {
+        if (fetchError.code === 'PGRST116') {
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert({
+              id: user.id,
+              entitlements: [],
+              stripe_customer_id: customerId,
+            })
+            .select('entitlements')
+            .single();
+
+          if (createError) {
+            console.error('[WEBHOOK] Error creating profile');
+            return NextResponse.json(
+              { error: 'Failed to create user profile' },
+              { status: 500 }
+            );
+          }
+          currentEntitlements = newProfile?.entitlements || [];
+        } else {
+          console.error('[WEBHOOK] Database error fetching profile');
+          return NextResponse.json(
+            { error: 'Database error fetching user profile' },
+            { status: 500 }
+          );
+        }
+      } else {
+        currentEntitlements = existingProfile?.entitlements || [];
+      }
+
       // Add the new entitlements if they don't exist
-      const currentEntitlements = existingProfile?.entitlements || [];
       const newEntitlements = currentEntitlements.filter(
         (ent: string) => !entitlementsToAdd.includes(ent)
       );
@@ -115,17 +162,17 @@ export async function POST(req: Request) {
           entitlements: newEntitlements,
           stripe_customer_id: customerId,
         })
-        .eq('id', metadata.userId);
+        .eq('id', user.id);
 
       if (updateError) {
-        console.error('Error updating profile:', updateError);
+        console.error('[WEBHOOK] Error updating profile');
         return NextResponse.json(
           { error: 'Failed to update user profile' },
           { status: 500 }
         );
       }
 
-      console.log(`✅ Granted ${entitlementsToAdd.join(', ')} to user ${metadata.userId}`);
+      console.log(`[WEBHOOK] Granted ${entitlementsToAdd.join(', ')} to user ${user.id}`);
       break;
     }
 
@@ -161,7 +208,7 @@ export async function POST(req: Request) {
     }
 
     default:
-      console.log(`Unhandled event type: ${event.type}`);
+      break;
   }
 
   return NextResponse.json({ received: true }, { status: 200 });

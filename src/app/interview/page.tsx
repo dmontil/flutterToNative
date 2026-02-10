@@ -47,18 +47,8 @@ export default function InterviewPage() {
 function InterviewContent() {
     const searchParams = useSearchParams();
     const currentTopic = searchParams.get("topic") || "theory-arc";
-    const { hasAccess, user, entitlements, isLoading } = useUser();
+    const { hasAccess, isLoading } = useUser();
     const isPro = hasAccess('ios_premium');
-    
-    console.log('[InterviewPage] 🔍 Current state:', {
-        hasUser: !!user,
-        userEmail: user?.email,
-        entitlements,
-        isLoading,
-        isPro,
-        hasAccessResult: hasAccess('ios_premium'),
-        currentTopic
-    });
 
     return (
         <DocLayout title="Interview Prep" items={INTERVIEW_TOPICS} productId="ios_playbook" premiumTopics={["theory-pop", "theory-closures", "theory-optionals", "theory-generics", "theory-lifecycle", "qa-core", "qa-ui", "qa-arch", "qa-adv", "qa-design", "qa-batch-1", "qa-batch-2", "qa-batch-3", "qa-batch-4"]}>
@@ -133,7 +123,7 @@ function InterviewContent() {
                 />
             )}
 
-            <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+            <PremiumLock isUnlocked={isLoading ? false : isPro}>
                 {currentTopic === "theory-pop" && (
                     <ResourceContent
                         icon={<Layers className="h-8 w-8 text-emerald-500" />}

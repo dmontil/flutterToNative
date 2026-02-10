@@ -1,8 +1,14 @@
+"use client";
+
 import { Navbar } from "@/components/ui/navbar";
 import { CodeComparison } from "@/components/ui/code-comparison";
 import { TestTube, ShieldCheck, ArrowRight } from "lucide-react";
+import { PremiumLock } from "@/components/ui/premium-lock";
+import { useUser } from "@/components/auth/user-provider";
 
 export default function TestingPage() {
+    const { hasAccess, isLoading } = useUser();
+    const isPro = hasAccess('ios_premium');
     return (
         <div className="min-h-screen bg-background">
             <Navbar />
@@ -77,6 +83,7 @@ class LoginViewModelTests: XCTestCase {
                     />
                 </section>
 
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                 {/* Mocks */}
                 <section className="mb-20">
                     <div className="flex items-center gap-4 mb-6">
@@ -102,6 +109,7 @@ class LoginViewModelTests: XCTestCase {
                         </pre>
                     </div>
                 </section>
+                </PremiumLock>
 
                 <div className="flex justify-between items-center py-8 border-t border-border">
                     <div className="text-sm text-muted-foreground">

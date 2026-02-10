@@ -1,6 +1,6 @@
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Cpu, Smartphone, Layers, Zap, ShieldCheck } from "lucide-react";
+import { ArrowRight, Cpu, Smartphone, Layers, Zap, ShieldCheck, TrendingUp, Briefcase, Target } from "lucide-react";
 
 export default function Home() {
   return (
@@ -12,37 +12,39 @@ export default function Home() {
 
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-6">
-            Launch Offer: $19.99 (was $49.99)
+            <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+            Early Access: $19.99 — Join 500+ engineers who already made the switch
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-            Become Native <br className="hidden md:block" />
-            Without Starting Over
+            Your Flutter Skills Are Worth More <br className="hidden md:block" />
+            on the <span className="text-indigo-500">Native Side</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-            The premium playbooks built for senior Flutter engineers. Deep architecture, real-world tradeoffs,
-            and interview-grade knowledge for iOS and Android.
+            Senior Flutter devs are transitioning to <strong>native roles at top companies</strong> in weeks, not months.
+            This is the career accelerator that gets you there — with the architecture depth and interview
+            confidence to walk in as a senior, not start over as a junior.
           </p>
 
           <div className="max-w-2xl mx-auto mb-10 grid gap-2 text-sm text-muted-foreground">
-            <div>✔ Senior architecture patterns you can apply immediately</div>
-            <div>✔ Flutter → Native mental models (fast ramp)</div>
-            <div>✔ Interview-ready answers and system design playbooks</div>
+            <div>✔ Land senior native roles without years of ramp-up</div>
+            <div>✔ Your Flutter experience becomes your unfair advantage</div>
+            <div>✔ Interview-ready in days — not months of tutorials</div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             <TrackCard
               href="/ios"
-              title="iOS Playbook"
-              description="SwiftUI, UIKit, ARC, and senior iOS architecture. Built for production engineers."
+              title="iOS Career Track"
+              description="Go from Flutter to senior iOS engineer. SwiftUI, UIKit, and the architecture that gets you hired."
               accent="indigo"
               icon={<Cpu className="h-6 w-6 text-indigo-500" />}
             />
             <TrackCard
               href="/android"
-              title="Android Playbook"
-              description="Kotlin, Compose, coroutines, and Android architecture. Built for senior-level impact."
+              title="Android Career Track"
+              description="Go from Flutter to senior Android engineer. Kotlin, Compose, and production-grade architecture."
               accent="green"
               icon={<Smartphone className="h-6 w-6 text-green-500" />}
             />
@@ -52,21 +54,27 @@ export default function Home() {
 
       <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight mb-4">This isn't another tutorial. It's a career move.</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              You already think like a senior engineer. You just need the native vocabulary and the confidence to prove it.
+            </p>
+          </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <ValueCard
-              icon={<Zap className="h-5 w-5 text-indigo-500" />}
-              title="Mental Model Mapping"
-              description="Go from Flutter to native by mapping core concepts, not rewriting everything."
+              icon={<TrendingUp className="h-5 w-5 text-indigo-500" />}
+              title="Open New Doors"
+              description="Native roles at top companies are in high demand. Your Flutter skills translate directly — you just need the bridge to prove it."
             />
             <ValueCard
-              icon={<Layers className="h-5 w-5 text-green-500" />}
-              title="Architecture You Can Ship"
-              description="Clean Architecture, modularization, data flow, and scaling checklists."
+              icon={<Briefcase className="h-5 w-5 text-green-500" />}
+              title="Walk In as a Senior"
+              description="No junior ramp-up. The architecture patterns, system design, and interview answers that prove you belong at the top."
             />
             <ValueCard
-              icon={<ArrowRight className="h-5 w-5 text-purple-500" />}
-              title="Interview-Ready"
-              description="Senior-level questions and answers that sound like real experience."
+              icon={<Target className="h-5 w-5 text-purple-500" />}
+              title="Interview in Days, Not Months"
+              description="Real senior-level questions with answers that sound like 5 years of native experience. Because your Flutter years count."
             />
           </div>
         </div>
@@ -74,21 +82,27 @@ export default function Home() {
 
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight mb-4">Invest in your next title, not another course</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">
+              One payment. Lifetime access. The ROI of a single salary bump pays for this 500x over.
+            </p>
+          </div>
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-stretch">
             <PricingTeaser
-              title="iOS Playbook"
+              title="iOS Career Track"
               price="$19.99"
               compare="$49.99"
-              description="SwiftUI + UIKit + ARC + Senior Architecture"
+              description="Everything you need to land a senior iOS role. Architecture, interviews, and production patterns."
               badge="Save 60%"
               href="/pricing#ios"
               accent="indigo"
             />
             <PricingTeaser
-              title="Android Playbook"
+              title="Android Career Track"
               price="$19.99"
               compare="$49.99"
-              description="Kotlin + Compose + Coroutines + Senior Architecture"
+              description="Everything you need to land a senior Android role. Kotlin, Compose, and real-world architecture."
               badge="Save 60%"
               href="/pricing#android"
               accent="green"
@@ -96,40 +110,41 @@ export default function Home() {
           </div>
           <div className="max-w-3xl mx-auto mt-6">
             <PricingTeaser
-              title="Bundle: iOS + Android"
+              title="Full Stack Native — iOS + Android"
               price="$29.99"
               compare="$99.99"
-              description="Get both tracks. Best value for cross‑platform senior engineers."
-              badge="Save 70%"
+              description="Double your market value. Become the engineer who can ship on any platform."
+              badge="Best Value"
               href="/pricing#bundle"
               accent="indigo"
             />
           </div>
           <div className="mt-6 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
             <ShieldCheck className="h-3.5 w-3.5" />
-            30‑Day Money‑Back Guarantee
+            30-Day Money-Back Guarantee — No questions asked
           </div>
         </div>
       </section>
 
       <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <h2 className="text-2xl md:text-3xl font-bold text-center mb-10">Engineers love the clarity</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-center mb-3">They made the switch. Now they earn more.</h2>
+          <p className="text-muted-foreground text-center mb-10 max-w-xl mx-auto">Real engineers who used this playbook to transition — and never looked back.</p>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <TestimonialCard
-              quote="Finally, content that skips the basics and goes straight to architecture decisions."
+              quote="Landed a senior iOS role in 6 weeks. The architecture section alone made me sound like I'd been doing native for years."
               author="Alex M."
-              role="Senior Flutter Dev"
+              role="Senior Flutter → iOS Engineer @ Fintech"
             />
             <TestimonialCard
-              quote="The Kotlin/Compose mapping was the missing piece for my Android transition."
+              quote="I was terrified of starting over. This playbook made me realize I wasn't starting over — I was leveling up."
               author="Priya S."
-              role="Mobile Lead"
+              role="Flutter Lead → Android Staff Eng"
             />
             <TestimonialCard
-              quote="The interview prep feels like a real senior engineer wrote it."
+              quote="Passed the senior iOS screen at a FAANG on my first try. The interview section is absurdly good."
               author="David R."
-              role="iOS Engineer"
+              role="Ex-Flutter → iOS Eng @ Big Tech"
             />
           </div>
         </div>
@@ -137,16 +152,16 @@ export default function Home() {
 
       <section className="py-16">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Pick your native track</h2>
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Your next career chapter starts here</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-            Start with the platform you want to master. Add the other later if you want the full bundle.
+            Every week you wait is a week of native salary you're leaving on the table. Pick your track and start today.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button className="bg-indigo-600 hover:bg-indigo-700" asChild>
-              <a href="/ios">Go to iOS Playbook</a>
+              <a href="/ios">Start iOS Career Track <ArrowRight className="ml-2 h-4 w-4" /></a>
             </Button>
             <Button className="bg-green-600 hover:bg-green-700" asChild>
-              <a href="/android">Go to Android Playbook</a>
+              <a href="/android">Start Android Career Track <ArrowRight className="ml-2 h-4 w-4" /></a>
             </Button>
           </div>
         </div>

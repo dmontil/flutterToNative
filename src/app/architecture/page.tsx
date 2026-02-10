@@ -30,18 +30,8 @@ export default function ArchitecturePage() {
 function ArchitectureContent() {
     const searchParams = useSearchParams();
     const currentTopic = searchParams.get("topic") || "arch-pattern";
-    const { hasAccess, user, entitlements, isLoading } = useUser();
+    const { hasAccess, isLoading } = useUser();
     const isPro = hasAccess('ios_premium');
-    
-    console.log('[ArchitecturePage] 🔍 Current state:', {
-        hasUser: !!user,
-        userEmail: user?.email,
-        entitlements,
-        isLoading,
-        isPro,
-        hasAccessResult: hasAccess('ios_premium'),
-        currentTopic
-    });
 
     const topic = ARCHITECTURE_TOPICS.find(t => t.id === currentTopic) || ARCHITECTURE_TOPICS[0];
 
@@ -173,7 +163,7 @@ function ArchitectureContent() {
                 </section>
             )}
 
-            <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+            <PremiumLock isUnlocked={isLoading ? false : isPro}>
                 {currentTopic === "arch-folder" && (
                     <section className="mb-20 space-y-16">
                         <div className="prose prose-invert max-w-none">

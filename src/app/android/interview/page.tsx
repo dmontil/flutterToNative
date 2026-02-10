@@ -42,18 +42,8 @@ export default function AndroidInterviewPage() {
 function AndroidInterviewContent() {
     const searchParams = useSearchParams();
     const currentTopic = searchParams.get("topic") || "theory-gc";
-    const { hasAccess, user, entitlements, isLoading } = useUser();
+    const { hasAccess, isLoading } = useUser();
     const isPro = hasAccess('android_premium');
-
-    console.log('[AndroidInterviewPage] 🔍 Current state:', {
-        hasUser: !!user,
-        userEmail: user?.email,
-        entitlements,
-        isLoading,
-        isPro,
-        hasAccessResult: hasAccess('android_premium'),
-        currentTopic
-    });
 
     return (
         <DocLayout
@@ -128,7 +118,7 @@ function AndroidInterviewContent() {
                 />
             )}
 
-            <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+            <PremiumLock isUnlocked={isLoading ? false : isPro}>
                 {currentTopic === "theory-pop" && (
                     <ResourceContent
                         icon={<Layers className="h-8 w-8 text-emerald-500" />}

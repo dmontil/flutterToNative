@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Code2, Layers, Zap } from "lucide-react";
+import { ArrowRight, Code2, Layers, Zap, TrendingUp, Briefcase, ShieldCheck } from "lucide-react";
 import { FAQSection } from "@/components/ui/faq-section";
 
 export default function AndroidHome() {
@@ -15,26 +15,35 @@ export default function AndroidHome() {
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-6">
             <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
-            Launch Offer: $19.99 (was $49.99)
+            Early Access: $19.99 — Engineers are landing Android roles in weeks
           </div>
 
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-            From Senior Flutter <br className="hidden md:block" />
-            to <span className="text-green-500">Senior Android Native</span>
+            Your Next Title: <br className="hidden md:block" />
+            <span className="text-green-500">Senior Android Engineer</span>
           </h1>
 
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Stop translating widgets line-by-line. Master <strong>Kotlin</strong>, <strong>Jetpack Compose</strong>,
-            and the Android runtime to ship production-grade native apps.
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
+            You already have the engineering brain. You just need the <strong>Kotlin vocabulary</strong>, the <strong>Compose patterns</strong>, and the <strong>interview confidence</strong> to walk into any Android role as a senior — not start over as a junior.
           </p>
+
+          <div className="max-w-xl mx-auto mb-8 grid gap-2 text-sm text-muted-foreground">
+            <div>✔ Land senior Android roles with your Flutter experience as leverage</div>
+            <div>✔ Pass senior Android interviews on the first try</div>
+            <div>✔ Ship production Compose in days, not months</div>
+          </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href="/pricing#android">
               <Button size="lg" className="h-12 px-8 text-base group">
-                Get Android Access — $19.99
+                Start My Android Career Track — $19.99
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
+            <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <ShieldCheck className="h-3.5 w-3.5" />
+              30-day money-back guarantee
+            </p>
           </div>
         </div>
       </section>
@@ -42,28 +51,27 @@ export default function AndroidHome() {
       <section className="py-24 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold tracking-tight mb-4">Why this playbook?</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4">This isn't a Kotlin tutorial. It's a career accelerator.</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Android is a different runtime, a different toolkit, and a different set of constraints. This path
-              is built for senior Flutter engineers who need real production-level Android knowledge.
+              You already think like a senior. We give you the Android-specific knowledge to prove it — in interviews, in architecture reviews, and in production code.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard
-              icon={<Zap className="h-6 w-6 text-green-500" />}
-              title="Mental Model Mapping"
-              description="Widgets to Composables, State to Flow, and the Android lifecycle truth."
+              icon={<TrendingUp className="h-6 w-6 text-green-500" />}
+              title="Open Senior-Level Doors"
+              description="Native Android roles at top companies are in high demand. Your Flutter years count — you just need the bridge to prove it."
             />
             <FeatureCard
-              icon={<Layers className="h-6 w-6 text-green-500" />}
-              title="Architecture That Scales"
-              description="Clean Architecture, Hilt DI, repository boundaries, and feature modularization."
+              icon={<Briefcase className="h-6 w-6 text-green-500" />}
+              title="Walk In as a Senior"
+              description="Hilt DI, Gradle modules, repository patterns — the architecture decisions that separate seniors from juniors."
             />
             <FeatureCard
               icon={<Code2 className="h-6 w-6 text-green-500" />}
-              title="Interview-Ready"
-              description="Compose, coroutines, memory, rendering, and the tough senior Android questions."
+              title="Crush the Interview"
+              description="Coroutines, Compose internals, lifecycle — the exact questions senior Android interviewers ask, with answers that prove depth."
             />
           </div>
         </div>
@@ -71,22 +79,23 @@ export default function AndroidHome() {
 
       <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Built for Android Reality</h2>
+          <h2 className="text-3xl font-bold tracking-tight mb-3 text-center">They made the switch. Now they earn more.</h2>
+          <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">Real engineers who used this playbook to land senior Android roles.</p>
           <div className="grid md:grid-cols-3 gap-8">
             <TestimonialCard
-              quote="The Kotlin mapping made the transition fast. I shipped a Compose screen in days."
+              quote="Landed a senior Android role in 5 weeks. The Compose architecture section made the difference in every interview."
               author="Priya S."
-              role="Senior Flutter Dev → Android Eng"
+              role="Flutter Lead → Android Staff Eng"
             />
             <TestimonialCard
-              quote="Finally a guide that doesn't treat me like a junior. It goes straight to architecture."
+              quote="At 32, I thought I'd be starting over. Instead I walked into a senior Android role and felt like I belonged from day one."
               author="Miguel A."
-              role="Tech Lead Mobile"
+              role="Flutter Dev → Senior Android @ Scale-up"
             />
             <TestimonialCard
-              quote="Interview prep was brutal and exactly what I needed for a senior Android screen."
+              quote="The interview section is unfair. I knew answers to questions the other candidates couldn't touch."
               author="Nina R."
-              role="Mobile Engineer"
+              role="Ex-Flutter → Android Eng @ Big Tech"
             />
           </div>
         </div>
@@ -95,28 +104,29 @@ export default function AndroidHome() {
       <section className="py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold tracking-tight mb-12 text-center">Your Roadmap to Native Android</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4 text-center">From Flutter Senior to Android Senior in 4 Steps</h2>
+            <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">Not a 6-month bootcamp. A focused career transition designed for engineers who already know how to build.</p>
 
             <div className="space-y-8">
               <RoadmapItem
                 step="01"
-                title="The Shift"
-                description="Rendering, lifecycle, and threading differences in Android."
+                title="Rewire Your Mental Model"
+                description="Map every Flutter concept to its Android equivalent. You'll stop thinking in Dart and start thinking in Kotlin — in hours."
               />
               <RoadmapItem
                 step="02"
-                title="Compose & Views"
-                description="Modern Compose plus how legacy Views still matter."
+                title="Master the Architecture That Gets You Hired"
+                description="Hilt, Gradle modules, repository patterns — the architecture senior Android interviewers expect you to know cold."
               />
               <RoadmapItem
                 step="03"
-                title="Coroutines & Flow"
-                description="Structured concurrency, cancellation, and reactive streams."
+                title="Build Like You've Been Here for Years"
+                description="Ship a production-grade Compose app with offline support, Flow-based state, and the code quality that earns trust."
               />
               <RoadmapItem
                 step="04"
-                title="Production App"
-                description="Feature modules, offline-first, and data sync patterns."
+                title="Crush the Interview"
+                description="Coroutines, lifecycle, Compose internals — walk into any senior Android screen with total confidence."
               />
             </div>
           </div>

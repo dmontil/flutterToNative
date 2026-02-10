@@ -5,6 +5,8 @@ import { Navbar } from "@/components/ui/navbar";
 import { Input } from "@/components/ui/input";
 import { Search, ArrowRight, Code, Info, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PremiumLock } from "@/components/ui/premium-lock";
+import { useUser } from "@/components/auth/user-provider";
 
 const MAPPINGS = [
     {
@@ -58,8 +60,13 @@ const MAPPINGS = [
     }
 ];
 
+const FREE_MAPPINGS_COUNT = 3;
+
 export default function WidgetMapPage() {
     const [search, setSearch] = useState("");
+    const { hasAccess, isLoading } = useUser();
+    const isPro = hasAccess('ios_premium');
+    const isUnlocked = isLoading ? false : isPro;
 
     const filteredMappings = MAPPINGS.filter(m =>
         m.flutter.toLowerCase().includes(search.toLowerCase()) ||
@@ -92,7 +99,7 @@ export default function WidgetMapPage() {
                     </div>
 
                     <div className="space-y-8">
-                        {filteredMappings.map((mapping, i) => (
+                        {filteredMappings.slice(0, FREE_MAPPINGS_COUNT).map((mapping, i) => (
                             <div key={i} className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                                 <div className="p-6 border-b border-border bg-muted/30">
                                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -138,6 +145,57 @@ export default function WidgetMapPage() {
                             </div>
                         ))}
                     </div>
+
+                    {filteredMappings.length > FREE_MAPPINGS_COUNT && (
+                        <PremiumLock isUnlocked={isUnlocked}>
+                            <div className="space-y-8">
+                                {filteredMappings.slice(FREE_MAPPINGS_COUNT).map((mapping, i) => (
+                                    <div key={i + FREE_MAPPINGS_COUNT} className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                                        <div className="p-6 border-b border-border bg-muted/30">
+                                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="bg-blue-500/10 p-2 rounded-lg">
+                                                        <Layers className="h-5 w-5 text-blue-500" />
+                                                    </div>
+                                                    <span className="font-bold text-lg">{mapping.flutter}</span>
+                                                </div>
+                                                <ArrowRight className="hidden md:block h-5 w-5 text-muted-foreground" />
+                                                <div className="flex items-center gap-3">
+                                                    <div className="bg-indigo-500/10 p-2 rounded-lg">
+                                                        <Info className="h-5 w-5 text-indigo-500" />
+                                                    </div>
+                                                    <span className="font-bold text-lg text-indigo-500">{mapping.swiftui}</span>
+                                                </div>
+                                            </div>
+                                            <p className="mt-4 text-muted-foreground text-sm italic">
+                                                {mapping.description}
+                                            </p>
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2">
+                                            <div className="p-6 bg-slate-950 border-r border-border/10">
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <Code className="h-4 w-4 text-blue-400" />
+                                                    <span className="text-xs font-mono text-blue-400 uppercase tracking-widest">Flutter</span>
+                                                </div>
+                                                <pre className="text-sm font-mono text-slate-300 overflow-x-auto">
+                                                    <code>{mapping.flutterCode}</code>
+                                                </pre>
+                                            </div>
+                                            <div className="p-6 bg-slate-900">
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <Code className="h-4 w-4 text-indigo-400" />
+                                                    <span className="text-xs font-mono text-indigo-400 uppercase tracking-widest">SwiftUI</span>
+                                                </div>
+                                                <pre className="text-sm font-mono text-slate-300 overflow-x-auto">
+                                                    <code>{mapping.swiftuiCode}</code>
+                                                </pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </PremiumLock>
+                    )}
 
                     {filteredMappings.length === 0 && (
                         <div className="text-center py-20 bg-muted/20 rounded-2xl border-2 border-dashed border-border">

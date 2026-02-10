@@ -9,12 +9,6 @@ export async function GET(request: NextRequest) {
     const token = requestUrl.searchParams.get('token')
     const type = requestUrl.searchParams.get('type')
     
-    console.log('[Auth Callback] Processing auth callback:', {
-      token: token ? 'present' : 'missing',
-      type,
-      url: requestUrl.toString()
-    })
-    
     if (token && type) {
       const cookieStore = await cookies()
       
@@ -60,7 +54,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(`${requestUrl.origin}/login?error=verification_failed`)
       }
       
-      console.log('[Auth Callback] Verification successful:', result.data.user?.email)
+      
       const redirect = requestUrl.searchParams.get('redirect') || '/'
       const safeRedirect = redirect.startsWith('/') && !redirect.startsWith('//')
         ? redirect
@@ -68,7 +62,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${requestUrl.origin}${safeRedirect}`)
     }
     
-    console.log('[Auth Callback] No token found, redirecting to home')
     return NextResponse.redirect(`${requestUrl.origin}/`)
   } catch (error) {
     console.error('[Auth Callback] Exception:', error)

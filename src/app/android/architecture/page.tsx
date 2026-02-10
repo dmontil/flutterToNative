@@ -31,18 +31,8 @@ export default function AndroidArchitecturePage() {
 function AndroidArchitectureContent() {
     const searchParams = useSearchParams();
     const currentTopic = searchParams.get("topic") || "arch-pattern";
-    const { hasAccess, user, entitlements, isLoading } = useUser();
+    const { hasAccess, isLoading } = useUser();
     const isPro = hasAccess('android_premium');
-
-    console.log('[AndroidArchitecturePage] 🔍 Current state:', {
-        hasUser: !!user,
-        userEmail: user?.email,
-        entitlements,
-        isLoading,
-        isPro,
-        hasAccessResult: hasAccess('android_premium'),
-        currentTopic
-    });
 
     const topic = ARCHITECTURE_TOPICS.find(t => t.id === currentTopic) || ARCHITECTURE_TOPICS[0];
 
@@ -132,7 +122,7 @@ function AndroidArchitectureContent() {
             )}
 
             {currentTopic === "arch-folder" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <section className="mb-20 space-y-10">
                         <h2 className="text-2xl font-bold flex items-center gap-3">
                             <Folder className="h-6 w-6 text-green-500" />
@@ -164,7 +154,7 @@ function AndroidArchitectureContent() {
             )}
 
             {currentTopic === "arch-coordinator" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <section className="mb-20 space-y-8">
                         <h2 className="text-2xl font-bold flex items-center gap-3">
                             <ArrowRight className="h-6 w-6 text-green-500" />
@@ -197,7 +187,7 @@ function AndroidArchitectureContent() {
             )}
 
             {currentTopic === "arch-modularization" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <section className="mb-20 space-y-8">
                         <h2 className="text-2xl font-bold flex items-center gap-3">
                             <FileCode className="h-6 w-6 text-green-500" />
@@ -216,7 +206,7 @@ function AndroidArchitectureContent() {
             )}
 
             {currentTopic === "arch-di" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <section className="mb-20 space-y-8">
                         <h2 className="text-2xl font-bold flex items-center gap-3">
                             <Shield className="h-6 w-6 text-green-500" />
@@ -250,7 +240,7 @@ object AppModule {
             )}
 
             {currentTopic === "arch-war-stories" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <section className="mb-20 space-y-8">
                         <h2 className="text-2xl font-bold">War Stories & Failure Modes</h2>
                         <div className="bg-card border border-border p-6 rounded-xl space-y-4 text-muted-foreground">
@@ -264,7 +254,7 @@ object AppModule {
             )}
 
             {currentTopic === "arch-checklist" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <section className="mb-20 space-y-8">
                         <h2 className="text-2xl font-bold">Scaling Checklist (Senior Level)</h2>
                         <ul className="list-disc ml-6 text-muted-foreground space-y-2">
@@ -280,7 +270,7 @@ object AppModule {
             )}
 
             {currentTopic === "arch-data" && (
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <section className="mb-20 space-y-8">
                         <h2 className="text-2xl font-bold">Data Flow & Offline Strategy</h2>
                         <div className="bg-card border border-border p-6 rounded-xl text-muted-foreground space-y-4">

@@ -28,17 +28,14 @@ export default function PricingPage() {
 
         try {
             setLoadingProduct(productId);
-            console.log('[Checkout] Starting checkout for product:', productId, 'currency:', currency);
             
             const { data: { session } } = await supabase.auth.getSession();
-            console.log('[Checkout] Session obtained:', !!session);
 
             const payload = { 
                 productId, 
                 currency,
                 redirectUrl: window.location.origin
             };
-            console.log('[Checkout] Sending payload:', payload);
 
             const response = await fetch("/api/checkout", {
                 method: "POST",
@@ -49,31 +46,18 @@ export default function PricingPage() {
                 body: JSON.stringify(payload),
             });
 
-            console.log('[Checkout] Response status:', response.status);
-            
             let data;
             const responseText = await response.text();
-            console.log('[Checkout] Raw response:', responseText);
             
             try {
                 data = JSON.parse(responseText);
-                console.log('[Checkout] Response data:', data);
             } catch (e) {
-                console.error('[Checkout] Failed to parse JSON response:', responseText);
-                console.error('[Checkout] Response was not valid JSON:', e);
+                console.error('[Checkout] Invalid response');
                 return;
             }
 
             if (data.url) {
-                console.log('[Checkout] Redirecting to Stripe:', data.url);
-                // Check if we're in E2E test mode - if so, don't navigate
-                if ((window as any).__e2e_test_mode) {
-                    (window as any).__e2e_checkout_url = data.url;
-                    return;
-                }
                 window.location.assign(data.url);
-            } else {
-                console.error('[Checkout] No URL in response');
             }
         } catch (error) {
             console.error("[Checkout] Error:", error);

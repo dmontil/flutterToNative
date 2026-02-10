@@ -7,17 +7,8 @@ import { PremiumLock } from "@/components/ui/premium-lock";
 import { useUser } from "@/components/auth/user-provider";
 
 export default function AndroidMentalModelPage() {
-    const { hasAccess, user, entitlements, isLoading } = useUser();
+    const { hasAccess, isLoading } = useUser();
     const isPro = hasAccess('android_premium');
-
-    console.log('[AndroidMentalModelPage] 🔍 Current state:', {
-        hasUser: !!user,
-        userEmail: user?.email,
-        entitlements,
-        isLoading,
-        isPro,
-        hasAccessResult: hasAccess('android_premium')
-    });
 
     return (
         <div className="min-h-screen bg-background">
@@ -64,7 +55,7 @@ export default function AndroidMentalModelPage() {
                     </div>
                 </section>
 
-                <PremiumLock isUnlocked={isPro || (!!user && !isLoading)}>
+                <PremiumLock isUnlocked={isLoading ? false : isPro}>
                     <section className="mb-20">
                         <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
                             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-500 text-white text-sm">2</span>

@@ -96,13 +96,10 @@ export function DocLayout({ title, items, children, productId = 'ios_playbook', 
     useEffect(() => {
         // If user becomes null (logout), clear local progress
         if (user === null) {
-            console.log('[DocLayout] 🧹 User logged out, clearing local progress');
             setCompletedLessons([]);
             try {
                 localStorage.removeItem("course_progress");
-                console.log('[DocLayout] ✅ Local progress cleared');
             } catch (e) {
-                console.error('[DocLayout] ❌ Failed to clear local progress', e);
             }
         }
     }, [user]);
@@ -226,7 +223,7 @@ export function DocLayout({ title, items, children, productId = 'ios_playbook', 
                                     {isCompleted && (
                                         <CheckCircle2 className="h-4 w-4 text-green-500 animate-in zoom-in" />
                                     )}
-                                    {!isCompleted && premiumTopics.includes(item.id) && !isPro && !(!!user && !isLoading) && (
+                                    {!isCompleted && premiumTopics.includes(item.id) && !isPro && !isLoading && (
                                         <Lock className="h-3.5 w-3.5 text-amber-500/70" />
                                     )}
                                 </Link>

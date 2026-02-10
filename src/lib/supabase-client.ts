@@ -45,7 +45,6 @@ const customStorage = {
         
         if (sessionCookie) {
             const cookieValue = decodeURIComponent(sessionCookie.split('=')[1]);
-            console.log('[CustomStorage] ✅ Session found in cookies, syncing to localStorage');
             
             // Store it in localStorage for the current subdomain
             try {
@@ -53,7 +52,6 @@ const customStorage = {
                 localStorage.setItem(key, cookieValue);
                 return cookieValue;
             } catch (error) {
-                console.warn('[CustomStorage] ⚠️ Invalid JSON in cookie', error);
                 return null;
             }
         }
@@ -70,11 +68,9 @@ const customStorage = {
         const domain = getCookieDomain();
         if (domain) {
             document.cookie = `${key}=${encodeURIComponent(value)}; path=/; domain=${domain}; SameSite=Lax; Max-Age=86400; Secure`;
-            console.log('[CustomStorage] 🍪 Session cookie set for domain:', domain);
         } else {
             // For localhost, still set a cookie but without domain
             document.cookie = `${key}=${encodeURIComponent(value)}; path=/; SameSite=Lax; Max-Age=86400`;
-            console.log('[CustomStorage] 🍪 Session cookie set for localhost');
         }
     },
     removeItem: (key: string) => {
@@ -88,7 +84,6 @@ const customStorage = {
             document.cookie = `${key}=; path=/; domain=${domain}; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
         }
         document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-        console.log('[CustomStorage] 🧹 Session removed from cookies and localStorage');
     }
 };
 
@@ -104,66 +99,21 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 // Simple sign out function
 export const signOut = async () => {
-    console.log('[Auth] 🚪 Starting sign out process...');
-    console.log('[Auth] 🌍 Environment check:', {
-        hasWindow: typeof window !== 'undefined',
-        hasLocalStorage: typeof Storage !== 'undefined'
-    });
-    
     try {
-        // Clear local storage first
         if (typeof window !== 'undefined') {
-            console.log('[Auth] 🧹 Clearing localStorage...');
-            const keysToRemove: string[] = [];
             Object.keys(localStorage).forEach(key => {
                 if (key.includes('supabase') || key.includes('sb-')) {
-                    keysToRemove.push(key);
                     localStorage.removeItem(key);
                 }
             });
-            console.log('[Auth] 🗑️ Removed localStorage keys:', keysToRemove);
-        } else {
-            console.log('[Auth] ⚠️ Window not available, skipping localStorage cleanup');
         }
         
-        console.log('[Auth] 📡 Calling supabase.auth.signOut...');
-        const { error } = await supabase.auth.signOut({ scope: 'local' });
-        
-        console.log('[Auth] 📥 SignOut response received:', {
-            hasError: !!error,
-            errorName: error?.name,
-            errorMessage: error?.message
-        });
-        
-        if (error) {
-            console.error('[Auth] ❌ Sign out error details:', {
-                name: error.name,
-                message: error.message,
-                status: error.status,
-                details: error
-            });
-            // Even if there's an error, consider it successful for UI purposes
-            console.log('[Auth] ⚠️ Treating as successful sign out despite error');
-        } else {
-            console.log('[Auth] ✅ Sign out successful - no errors');
-        }
-        
-        console.log('[Auth] ✅ Sign out process completed');
+        await supabase.auth.signOut({ scope: 'local' });
         return { error: null };
     } catch (err: any) {
-        console.error('[Auth] 💥 Sign out exception caught:', {
-            name: err?.name,
-            message: err?.message,
-            stack: err?.stack
-        });
-        
-        // Handle AbortError gracefully
         if (err?.name === 'AbortError') {
-            console.log('[Auth] ⚠️ Sign out aborted (normal during navigation)');
             return { error: null };
         }
-        
-        console.log('[Auth] ⚠️ Returning success anyway for UI purposes');
         return { error: null };
     }
 };

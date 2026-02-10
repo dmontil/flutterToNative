@@ -3,20 +3,17 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/components/auth/user-provider";
 import { signOut } from "@/lib/supabase-client";
-import { usePathname } from "next/navigation";
+import { usePlatform } from "@/hooks/use-platform";
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [isLocal, setIsLocal] = useState(false);
-    const { user } = useUser();
-    const pathname = usePathname();
-    const isAndroid = pathname?.startsWith("/android");
-    const isSelector = pathname === "/";
-    const base = isAndroid ? "/android" : "";
+    const { user, hasAccess } = useUser();
+    const { platform, isAndroid, isIos, isSelector } = usePlatform();
     
     useEffect(() => {
         setIsLocal(
@@ -27,12 +24,19 @@ export function Navbar() {
     const iosHref = isLocal ? "/ios" : "https://ios.fluttertonative.pro";
     const androidHref = isLocal ? "/android" : "https://android.fluttertonative.pro";
 
+    const base = isAndroid ? "/android" : "";
+    
     const navLinks = isSelector ? [] : [
         { href: `${base}/mental-model`, label: "Concepts" },
         { href: `${base}/components-ui`, label: "UI Lab" },
         { href: `${base}/architecture`, label: "Architecture" },
         { href: `${base}/interview`, label: "Interview Prep" },
+        { href: `${base}/feature-dive`, label: "Feature Deep Dive" },
+        { href: `${base}/testing`, label: "Testing" },
+        { href: `${base}/widget-map`, label: "Widget Mapping" },
     ];
+    
+    const hasPremium = isAndroid ? hasAccess('android_premium') || hasAccess('bundle_premium') : hasAccess('ios_premium') || hasAccess('bundle_premium');
 
     const handleSignOut = async () => {
         try {
@@ -51,13 +55,13 @@ export function Navbar() {
                 </Link>
 
                 {/* Desktop Nav */}
-                <div className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground">
+                <div className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground items-center">
                     <div className="flex items-center gap-2 rounded-full bg-muted/30 border border-border/60 px-2 py-1">
                         <a
                             href={iosHref}
                             className={cn(
                                 "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-colors",
-                                !isAndroid && !isSelector ? "bg-indigo-500 text-white" : "text-muted-foreground hover:text-foreground"
+                                isIos && !isSelector ? "bg-indigo-500 text-white" : "text-muted-foreground hover:text-foreground"
                             )}
                         >
                             iOS
@@ -87,9 +91,15 @@ export function Navbar() {
                     <div className="hidden sm:flex items-center gap-4">
                         {user ? (
                             <>
+                                {hasPremium && (
+                                    <div className="flex items-center gap-1 text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white px-2 py-1 rounded-full">
+                                        <Crown className="h-3 w-3" />
+                                        <span>PRO</span>
+                                    </div>
+                                )}
                                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                     <User className="h-4 w-4" />
-                                    <span>{user.email}</span>
+                                    <span className="hidden lg:inline">{user.email}</span>
                                 </div>
                                 <Button
                                     variant="outline"
@@ -132,7 +142,7 @@ export function Navbar() {
                             href={iosHref}
                             className={cn(
                                 "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-colors border border-border/60",
-                                !isAndroid && !isSelector ? "bg-indigo-500 text-white" : "text-muted-foreground hover:text-foreground"
+                                isIos && !isSelector ? "bg-indigo-500 text-white" : "text-muted-foreground hover:text-foreground"
                             )}
                             onClick={() => setIsOpen(false)}
                         >
@@ -162,6 +172,12 @@ export function Navbar() {
                     <div className="flex flex-col gap-3 pt-4">
                         {user ? (
                             <>
+                                {hasPremium && (
+                                    <div className="flex items-center justify-center gap-1 text-xs font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-2 rounded-full">
+                                        <Crown className="h-3 w-3" />
+                                        <span>PREMIUM ACCESS</span>
+                                    </div>
+                                )}
                                 <div className="text-center py-2 text-sm text-muted-foreground">
                                     {user.email}
                                 </div>

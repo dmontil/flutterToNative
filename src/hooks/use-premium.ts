@@ -1,5 +1,5 @@
 import { useUser } from "@/components/auth/user-provider";
-import { usePathname } from "next/navigation";
+import { usePlatform } from "@/hooks/use-platform";
 
 /**
  * Hook reutilizable para verificar acceso premium
@@ -7,10 +7,7 @@ import { usePathname } from "next/navigation";
  */
 export function usePremium() {
   const { user, hasAccess } = useUser();
-  const pathname = usePathname();
-  
-  // Determine which platform we're on
-  const isAndroidPath = pathname?.startsWith('/android');
+  const { platform, isAndroid, isIos } = usePlatform();
   
   // Check appropriate entitlements
   const hasIosPremium = hasAccess('ios_premium');
@@ -24,16 +21,22 @@ export function usePremium() {
   if (hasBundlePremium) {
     // Bundle gives access to everything
     isPro = true;
-  } else if (isAndroidPath) {
-    // On Android path, need Android premium
+  } else if (isAndroid) {
+    // On Android, need Android premium
     isPro = hasAndroidPremium;
-  } else {
-    // On iOS path (default), need iOS premium  
+  } else if (isIos) {
+    // On iOS, need iOS premium  
     isPro = hasIosPremium;
   }
   
   const isLoggedIn = !!user;
-
+  
+  // Check if user should see upgrade prompt
+  const shouldShowUpgrade = isLoggedIn && !isPro;
+  
+  // Check if user can upgrade (has one platform but not the other)
+  const canUpgradeToBundle = hasIosPremium || hasAndroidPremium;
+  
   return {
     isPro,
     isLoggedIn,
@@ -42,6 +45,10 @@ export function usePremium() {
     hasIosPremium,
     hasAndroidPremium,
     hasBundlePremium,
-    isAndroidPath,
+    platform,
+    isAndroid,
+    isIos,
+    shouldShowUpgrade,
+    canUpgradeToBundle,
   };
 }

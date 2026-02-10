@@ -1,10 +1,13 @@
 import Link from "next/link";
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Code2, Layers, Zap, TrendingUp, Briefcase, ShieldCheck } from "lucide-react";
+import { ArrowRight, Code2, Layers, Zap, TrendingUp, Briefcase, ShieldCheck, BookOpen } from "lucide-react";
 import { FAQSection } from "@/components/ui/faq-section";
+import { usePremium } from "@/hooks/use-premium";
 
 export default function AndroidHome() {
+  const { isPro, isLoggedIn } = usePremium();
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar />
@@ -34,12 +37,22 @@ export default function AndroidHome() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/pricing#android">
-              <Button size="lg" className="h-12 px-8 text-base group">
-                Start My Android Career Track — $19.99
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-            </Link>
+            {isLoggedIn && isPro ? (
+              <Link href="/dashboard">
+                <Button size="lg" className="h-12 px-8 text-base bg-green-600 hover:bg-green-700">
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  Start Learning
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/pricing#android">
+                <Button size="lg" className="h-12 px-8 text-base group">
+                  Start My Android Career Track — $19.99
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
+            )}
             <p className="text-xs text-muted-foreground flex items-center gap-1">
               <ShieldCheck className="h-3.5 w-3.5" />
               30-day money-back guarantee

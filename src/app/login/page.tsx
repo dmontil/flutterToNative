@@ -4,16 +4,14 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Navbar } from "@/components/ui/navbar";
 import { supabase } from "@/lib/supabase-client";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState, useEffect } from "react";
 
 function LoginForm() {
-    const searchParams = useSearchParams();
-    const redirect = searchParams.get("redirect") || "/";
-    const redirectTo =
-        typeof window !== "undefined"
-            ? `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirect)}`
-            : "/auth/callback";
+    const [redirectTo, setRedirectTo] = useState("/auth/callback");
+
+    useEffect(() => {
+        setRedirectTo(`${window.location.origin}/auth/callback`);
+    }, []);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-64px)] p-4">

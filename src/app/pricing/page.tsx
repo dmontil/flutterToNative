@@ -3,7 +3,7 @@
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
 import { Check, ShieldCheck } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback, Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/components/auth/user-provider";
 
@@ -14,18 +14,22 @@ import { formatPrice } from "@/lib/products";
 type Currency = "USD" | "EUR";
 type ProductId = "ios_playbook" | "android_playbook" | "bundle_playbook";
 
-export default function PricingPage() {
+function PricingPageContent() {
     const [loadingProduct, setLoadingProduct] = useState<ProductId | null>(null);
     const [currency, setCurrency] = useState<Currency>("USD");
     const router = useRouter();
     const { user } = useUser();
 
-    const onCheckout = async (productId: ProductId) => {
+    const onCheckout = useCallback(async (productId: ProductId) => {
         if (!user) {
-            // Preserve current URL with hash for redirect after login
-            const currentUrl = window.location.href;
-            const redirectPath = currentUrl.replace(window.location.origin, "");
-            router.push(`/login?redirect=${encodeURIComponent(redirectPath)}`);
+            // Store the hash for after login redirect
+            const hash = window.location.hash;
+            const validHashes = ['#ios', '#android', '#bundle'];
+            
+            if (hash && validHashes.includes(hash)) {
+                sessionStorage.setItem('pricing_redirect_hash', hash);
+            }
+            router.push('/login');
             return;
         }
 
@@ -67,7 +71,7 @@ export default function PricingPage() {
         } finally {
             setLoadingProduct(null);
         }
-    };
+    }, [user, currency, router]);
 
     const prices = {
         ios: { amount: 1999, original: 4999 },
@@ -271,5 +275,13 @@ export default function PricingPage() {
                 </div>
             </main>
         </div>
+    );
+}
+
+export default function PricingPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <PricingPageContent />
+        </Suspense>
     );
 }

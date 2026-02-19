@@ -10,9 +10,15 @@ import { useUser } from "@/components/auth/user-provider";
 import { supabase } from "@/lib/supabase-client";
 import { FAQSection } from "@/components/ui/faq-section";
 import { formatPrice } from "@/lib/products";
+import { getAttributionForCheckout, trackEvent } from "@/lib/analytics";
 
 type Currency = "USD" | "EUR";
 type ProductId = "ios_playbook" | "android_playbook" | "bundle_playbook";
+const PRODUCT_AMOUNTS: Record<ProductId, number> = {
+    ios_playbook: 19.99,
+    android_playbook: 19.99,
+    bundle_playbook: 29.99,
+};
 
 function PricingPageContent() {
     const [loadingProduct, setLoadingProduct] = useState<ProductId | null>(null);
@@ -35,13 +41,21 @@ function PricingPageContent() {
 
         try {
             setLoadingProduct(productId);
+            trackEvent("begin_checkout", {
+                currency,
+                value: PRODUCT_AMOUNTS[productId],
+                item_id: productId,
+                item_name: productId,
+            });
             
             const { data: { session } } = await supabase.auth.getSession();
+            const attribution = getAttributionForCheckout();
 
             const payload = { 
                 productId, 
                 currency,
-                redirectUrl: window.location.origin
+                redirectUrl: window.location.origin,
+                attribution
             };
 
             const response = await fetch("/api/checkout", {
@@ -64,6 +78,11 @@ function PricingPageContent() {
             }
 
             if (data.url) {
+                trackEvent("checkout_redirect", {
+                    currency,
+                    value: PRODUCT_AMOUNTS[productId],
+                    item_id: productId,
+                });
                 window.location.assign(data.url);
             }
         } catch (error) {

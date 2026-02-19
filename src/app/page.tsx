@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/ui/navbar";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Cpu, Smartphone, Layers, Zap, ShieldCheck, TrendingUp, Briefcase, Target } from "lucide-react";
+import { TrackedCtaLink } from "@/components/analytics/tracked-cta-link";
 
 export default function Home() {
   return (
@@ -34,9 +35,18 @@ export default function Home() {
           </div>
 
           <div className="mb-10">
-            <Button className="bg-indigo-600 hover:bg-indigo-700" asChild>
-              <a href="/pricing#bundle">Get Lifetime Access - $19.99</a>
-            </Button>
+            <TrackedCtaLink
+              href="/pricing#bundle"
+              className="bg-indigo-600 hover:bg-indigo-700"
+              eventName="select_promotion"
+              eventParams={{
+                promotion_name: "hero_lifetime_offer",
+                creative_name: "hero_primary_cta",
+                location_id: "home_hero",
+              }}
+            >
+              Get Lifetime Access - $19.99
+            </TrackedCtaLink>
             <p className="mt-3 text-sm text-muted-foreground">
               For experienced Flutter engineers. <br className="hidden sm:block" />
               Not a beginner Kotlin course.

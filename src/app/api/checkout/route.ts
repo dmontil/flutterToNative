@@ -3,6 +3,20 @@ import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
 import { getPriceId, ProductId, Currency } from "@/lib/products";
 
+type AttributionPayload = {
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_term?: string;
+    utm_content?: string;
+    gclid?: string;
+    fbclid?: string;
+    msclkid?: string;
+    ttclid?: string;
+    landing_page?: string;
+    referrer?: string;
+};
+
 // Helper function to get Stripe instance
 function getStripe() {
     if (!process.env.STRIPE_SECRET_KEY) {
@@ -50,7 +64,11 @@ export async function POST(req: Request) {
             currency: "USD" as Currency,
         }));
 
-        const { productId, currency = "USD" } = requestBody;
+        const { productId, currency = "USD", attribution } = requestBody as {
+            productId: ProductId;
+            currency: Currency;
+            attribution?: AttributionPayload;
+        };
 
         if (!["ios_playbook", "android_playbook", "bundle_playbook"].includes(productId)) {
             return new NextResponse("Invalid product ID", { status: 400 });
@@ -85,14 +103,15 @@ export async function POST(req: Request) {
         // Determine success URL based on product
         let successUrl;
         if (productId === 'android_playbook') {
-            successUrl = `${baseUrl}/android/components-ui?success=true`;
+            successUrl = `${baseUrl}/android/components-ui?success=true&product=${productId}&currency=${currency}&session_id={CHECKOUT_SESSION_ID}`;
         } else if (productId === 'bundle_playbook') {
-            successUrl = `${baseUrl}/components-ui?success=true`;
+            successUrl = `${baseUrl}/components-ui?success=true&product=${productId}&currency=${currency}&session_id={CHECKOUT_SESSION_ID}`;
         } else {
             // ios_playbook
-            successUrl = `${baseUrl}/components-ui?success=true`;
+            successUrl = `${baseUrl}/components-ui?success=true&product=${productId}&currency=${currency}&session_id={CHECKOUT_SESSION_ID}`;
         }
 
+        const sanitizedAttribution = attribution || {};
         const sessionParams = {
             line_items: [{
                 price: stripePriceId,
@@ -106,6 +125,14 @@ export async function POST(req: Request) {
                 productId: productId,
                 currency: currency,
                 domain: baseUrl,
+                utm_source: sanitizedAttribution.utm_source || "",
+                utm_medium: sanitizedAttribution.utm_medium || "",
+                utm_campaign: sanitizedAttribution.utm_campaign || "",
+                utm_term: sanitizedAttribution.utm_term || "",
+                utm_content: sanitizedAttribution.utm_content || "",
+                gclid: sanitizedAttribution.gclid || "",
+                fbclid: sanitizedAttribution.fbclid || "",
+                landing_page: sanitizedAttribution.landing_page || "",
             },
             customer_email: user.email,
         };

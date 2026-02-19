@@ -5,7 +5,8 @@ import { CodeComparison } from "@/components/ui/code-comparison";
 import { PremiumLock } from "@/components/ui/premium-lock";
 import { useUser } from "@/components/auth/user-provider";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 const COMPONENT_TOPICS = [
     { title: "Layout: Column & Row", id: "layout-flex" },
@@ -37,6 +38,10 @@ const COMPONENT_TOPICS = [
     { title: "Advanced: Platform (Camera/Loc)", id: "advanced-platform" },
 ];
 
+const PRODUCT_VALUES: Record<string, number> = {
+    android_playbook: 19.99,
+};
+
 export default function AndroidComponentsPage() {
     return (
         <Suspense fallback={<div className="p-8">Loading Components...</div>}>
@@ -50,6 +55,25 @@ function AndroidComponentsContent() {
     const currentTopic = searchParams.get("topic") || "layout-flex";
     const { hasAccess, isLoading } = useUser();
     const isPro = hasAccess('android_premium');
+    const success = searchParams.get("success");
+    const sessionId = searchParams.get("session_id");
+    const product = searchParams.get("product") || "android_playbook";
+    const currency = searchParams.get("currency") || "USD";
+
+    useEffect(() => {
+        if (success !== "true" || !sessionId) return;
+        const dedupeKey = `purchase_tracked_${sessionId}`;
+        if (sessionStorage.getItem(dedupeKey)) return;
+
+        trackEvent("purchase", {
+            transaction_id: sessionId,
+            currency,
+            value: PRODUCT_VALUES[product] || 19.99,
+            item_id: product,
+            item_name: product,
+        });
+        sessionStorage.setItem(dedupeKey, "1");
+    }, [success, sessionId, product, currency]);
 
     const topic = COMPONENT_TOPICS.find(t => t.id === currentTopic) || COMPONENT_TOPICS[0];
 

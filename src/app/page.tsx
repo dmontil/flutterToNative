@@ -17,20 +17,30 @@ export default function Home() {
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-            Your Flutter Skills Are Worth More <br className="hidden md:block" />
-            on the <span className="text-indigo-500">Native Side</span>
+            Senior Flutter? <br className="hidden md:block" />
+            Move to <span className="text-indigo-500">Native</span> Without Starting Over
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-            Senior Flutter devs are transitioning to <strong>native roles at top companies</strong> in weeks, not months.
-            This is the career accelerator that gets you there — with the architecture depth and interview
-            confidence to walk in as a senior, not start over as a junior.
+            A practical bridge from Flutter to production-grade Kotlin & Swift. Lifecycle, architecture, concurrency,
+            interviews.
           </p>
 
-          <div className="max-w-2xl mx-auto mb-10 grid gap-2 text-sm text-muted-foreground">
-            <div>✔ Land senior native roles without years of ramp-up</div>
-            <div>✔ Your Flutter experience becomes your unfair advantage</div>
-            <div>✔ Interview-ready in days — not months of tutorials</div>
+          <div className="max-w-2xl mx-auto mb-8 grid gap-2 text-sm text-muted-foreground text-left">
+            <div>• Translate Flutter mental models to real native architecture</div>
+            <div>• Avoid common migration mistakes</div>
+            <div>• Learn what actually matters in senior interviews</div>
+            <div>• Real code comparisons (Flutter ↔ Compose ↔ SwiftUI)</div>
+          </div>
+
+          <div className="mb-10">
+            <Button className="bg-indigo-600 hover:bg-indigo-700" asChild>
+              <a href="/pricing#bundle">Get Lifetime Access - $19.99</a>
+            </Button>
+            <p className="mt-3 text-sm text-muted-foreground">
+              For experienced Flutter engineers. <br className="hidden sm:block" />
+              Not a beginner Kotlin course.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">

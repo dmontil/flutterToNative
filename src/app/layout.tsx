@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -82,7 +83,9 @@ export default function RootLayout({
       <body className="antialiased">
         <UserProvider>
           <SessionSync />
-          <GoogleAnalytics />
+          <Suspense fallback={null}>
+            <GoogleAnalytics />
+          </Suspense>
           {children}
         </UserProvider>
         <JsonLd type="website" />

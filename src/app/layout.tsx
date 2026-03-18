@@ -70,6 +70,7 @@ import { UserProvider } from "@/components/auth/user-provider";
 import { JsonLd } from "@/components/seo/json-ld";
 import { SessionSync } from "@/lib/session-sync";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import { Analytics } from "@vercel/analytics/react";
 
 export default function RootLayout({
   children,
@@ -87,6 +88,7 @@ export default function RootLayout({
         <JsonLd type="website" />
         <JsonLd type="course" />
         <JsonLd type="product" />
+        <Analytics />
       </body>
     </html>
   );

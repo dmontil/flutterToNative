@@ -28,14 +28,11 @@ function PricingPageContent() {
 
     const onCheckout = useCallback(async (productId: ProductId) => {
         if (!user) {
-            // Store the hash for after login redirect
-            const hash = window.location.hash;
-            const validHashes = ['#ios', '#android', '#bundle'];
-            
-            if (hash && validHashes.includes(hash)) {
-                sessionStorage.setItem('pricing_redirect_hash', hash);
-            }
-            router.push('/login');
+            sessionStorage.setItem(
+                "checkout_intent",
+                JSON.stringify({ productId, currency })
+            );
+            router.push("/login");
             return;
         }
 

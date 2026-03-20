@@ -25,8 +25,19 @@ export function middleware(req: NextRequest) {
   if (host.startsWith("ios.") && pathname === "/") {
     return NextResponse.rewrite(new URL("/ios", req.url));
   }
-  if (host.startsWith("android.") && pathname === "/") {
-    return NextResponse.rewrite(new URL("/android", req.url));
+  if (host.startsWith("android.")) {
+    const isSharedRoute =
+      pathname.startsWith("/api") ||
+      pathname.startsWith("/auth") ||
+      pathname.startsWith("/login") ||
+      pathname.startsWith("/pricing") ||
+      pathname.startsWith("/dashboard") ||
+      pathname.startsWith("/premium");
+
+    if (!pathname.startsWith("/android") && !isSharedRoute) {
+      const rewritePath = pathname === "/" ? "/android" : `/android${pathname}`;
+      return NextResponse.rewrite(new URL(rewritePath, req.url));
+    }
   }
 
   // Set cross-subdomain cookie for session sharing

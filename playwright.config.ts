@@ -11,7 +11,7 @@ export default defineConfig({
   workers: 1,
   reporter: 'html',
   use: {
-    baseURL: process.env.E2E_BASE_URL || 'http://127.0.0.1:3002',
+    baseURL: process.env.E2E_BASE_URL || 'http://127.0.0.1:3005',
     trace: 'on-first-retry',
   },
 
@@ -23,8 +23,9 @@ export default defineConfig({
   ],
 
   webServer: process.env.CI || process.env.E2E_NO_WEBSERVER ? undefined : {
-    command: 'HOSTNAME=127.0.0.1 PORT=3002 npm run dev -- -H 127.0.0.1',
-    url: 'http://127.0.0.1:3002',
-    reuseExistingServer: !process.env.CI,
+    command: 'HOSTNAME=127.0.0.1 PORT=3005 npm run dev -- -H 127.0.0.1',
+    url: 'http://127.0.0.1:3005',
+    reuseExistingServer: false,
+    timeout: 60000,
   },
 });

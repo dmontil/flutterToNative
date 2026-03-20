@@ -4,35 +4,84 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase-client";
 
+type CheckoutIntent = {
+  productId: string;
+  currency: string;
+};
+
 export default function AuthCallbackPage() {
   const router = useRouter();
   const [status, setStatus] = useState("Verifying your login...");
 
   useEffect(() => {
-    const handleAuth = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
+    let sub: { unsubscribe: () => void } | null = null;
 
-      if (session) {
-        router.replace("/pricing");
+    const handleAuth = async () => {
+      // Intentar obtener sesión inmediatamente
+      const { data: { session: existingSession } } = await supabase.auth.getSession();
+
+      const session = existingSession ?? await new Promise<any>((resolve) => {
+        const timeoutId = setTimeout(() => {
+          sub?.unsubscribe();
+          resolve(null);
+        }, 10000);
+
+        const { data } = supabase.auth.onAuthStateChange((event, s) => {
+          if (event === "SIGNED_IN" && s) {
+            clearTimeout(timeoutId);
+            data.subscription.unsubscribe();
+            resolve(s);
+          }
+        });
+        sub = data.subscription;
+      });
+
+      if (!session) {
+        setStatus("Something went wrong. Redirecting to login...");
+        setTimeout(() => router.replace("/login"), 2000);
         return;
       }
 
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(
-        (event, session) => {
-          if (event === "SIGNED_IN" && session) {
-            subscription.unsubscribe();
-            router.replace("/pricing");
-          }
-        }
-      );
+      // Leer intent de checkout guardado antes del login
+      const raw = sessionStorage.getItem("checkout_intent");
+      sessionStorage.removeItem("checkout_intent");
 
-      setTimeout(() => {
-        setStatus("Something went wrong. Redirecting to login...");
-        setTimeout(() => router.replace("/login"), 2000);
-      }, 10000);
+      if (raw) {
+        try {
+          const intent: CheckoutIntent = JSON.parse(raw);
+          setStatus("Preparing your checkout...");
+
+          const response = await fetch("/api/checkout", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${session.access_token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              productId: intent.productId,
+              currency: intent.currency,
+            }),
+          });
+
+          const data = await response.json().catch(() => null);
+
+          if (data?.url) {
+            window.location.assign(data.url);
+            return;
+          }
+        } catch {
+          // Si falla el checkout, caer a /pricing
+        }
+      }
+
+      router.replace("/pricing");
     };
 
     handleAuth();
+
+    return () => {
+      sub?.unsubscribe();
+    };
   }, [router]);
 
   return (

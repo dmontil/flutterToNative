@@ -72,14 +72,6 @@ export async function POST(req: Request) {
       const metadata = session.metadata;
       const customerId = session.customer as string;
 
-      if (!customerEmail) {
-        console.error('[WEBHOOK] Missing customer email in session:', session.id);
-        return NextResponse.json(
-          { error: 'Missing customer email' },
-          { status: 400 }
-        );
-      }
-
       // Determine which entitlements to grant based on metadata
       const productId = metadata?.productId || 'ios_playbook';
       let entitlementsToAdd: string[] = [];
@@ -89,27 +81,36 @@ export async function POST(req: Request) {
       } else if (productId === 'bundle_playbook') {
         entitlementsToAdd = ['ios_premium', 'android_premium', 'bundle_premium'];
       } else {
-        // Default to ios_playbook
         entitlementsToAdd = ['ios_premium'];
       }
 
-      const { data: authUser, error: authError } = await supabase.auth.admin.listUsers();
-      
-      if (authError) {
-        console.error('[WEBHOOK] Error fetching auth users');
-        return NextResponse.json(
-          { error: 'Failed to lookup user' },
-          { status: 500 }
-        );
-      }
+      // Prefer userId from metadata (fast path) — avoids scanning all users
+      const userId = metadata?.userId;
+      let user: any;
 
-      const user = authUser.users.find(u => u.email === customerEmail);
-      if (!user) {
-        console.error('[WEBHOOK] No auth user found for session:', session.id);
-        return NextResponse.json(
-          { error: 'User not found' },
-          { status: 400 }
-        );
+      if (userId) {
+        const { data: authUser, error: authError } = await supabase.auth.admin.getUserById(userId);
+        if (authError || !authUser.user) {
+          console.error('[WEBHOOK] Error fetching user by ID for session:', session.id);
+          return NextResponse.json({ error: 'User not found' }, { status: 400 });
+        }
+        user = authUser.user;
+      } else {
+        // Fallback: search by email for payments without userId in metadata
+        if (!customerEmail) {
+          console.error('[WEBHOOK] Missing customer email and userId in session:', session.id);
+          return NextResponse.json({ error: 'Missing customer email' }, { status: 400 });
+        }
+        const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+        if (authError) {
+          console.error('[WEBHOOK] Error fetching auth users');
+          return NextResponse.json({ error: 'Failed to lookup user' }, { status: 500 });
+        }
+        user = authUsers.users.find((u: any) => u.email === customerEmail);
+        if (!user) {
+          console.error('[WEBHOOK] No auth user found for session:', session.id);
+          return NextResponse.json({ error: 'User not found' }, { status: 400 });
+        }
       }
 
       const { data: existingProfile, error: fetchError } = await supabase

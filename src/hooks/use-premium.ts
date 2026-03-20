@@ -21,14 +21,14 @@ export function usePremium() {
   let isPro = false;
   
   if (hasBundlePremium) {
-    // Bundle gives access to everything
     isPro = true;
   } else if (isAndroid) {
-    // On Android, need Android premium
     isPro = hasAndroidPremium;
   } else if (isIos) {
-    // On iOS, need iOS premium  
     isPro = hasIosPremium;
+  } else {
+    // Plataforma "selector" (dominio raíz) — acceso si tiene cualquier premium
+    isPro = hasIosPremium || hasAndroidPremium;
   }
   
   const isLoggedIn = !!user;

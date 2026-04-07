@@ -14,25 +14,32 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center">
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-6">
             <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
-            Early Access: $19.99 — Join 500+ engineers who already made the switch
+            Early Access: $19.99 — The Flutter → Native playbook
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black tracking-tighter mb-6 bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
-            Senior Flutter? <br className="hidden md:block" />
-            Move to <span className="text-indigo-500">Native</span> Without Starting Over
+            From Flutter developer to native engineer <br className="hidden md:block" />
+            <span className="text-indigo-500">without starting from zero</span>
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 leading-relaxed">
-            A practical bridge from Flutter to production-grade Kotlin & Swift. Lifecycle, architecture, concurrency,
-            interviews.
+            A practical playbook to pass native interviews using your existing Flutter experience.
+            Stop feeling stuck in Flutter. Learn what actually matters in iOS and Android.
           </p>
 
-          <div className="max-w-2xl mx-auto mb-8 grid gap-2 text-sm text-muted-foreground text-left">
-            <div>• Translate Flutter mental models to real native architecture</div>
-            <div>• Avoid common migration mistakes</div>
-            <div>• Learn what actually matters in senior interviews</div>
-            <div>• Real code comparisons (Flutter ↔ Compose ↔ SwiftUI)</div>
-          </div>
+          <ul className="max-w-2xl mx-auto mb-10 grid gap-3 text-base text-muted-foreground text-center">
+            {[
+              "No fluff. No theory. Just what actually matters",
+              "Learn only what native interviewers care about",
+              "Avoid wasting months on the wrong topics",
+              "Position yourself as native-ready, fast",
+            ].map((text) => (
+              <li key={text} className="flex items-center justify-center gap-2">
+                <span aria-hidden="true" className="inline-block h-2.5 w-2.5 rounded-full bg-foreground/50"></span>
+                <span>{text}</span>
+              </li>
+            ))}
+          </ul>
 
           <div className="mb-10">
             <TrackedCtaLink
@@ -45,7 +52,7 @@ export default function Home() {
                 location_id: "home_hero",
               }}
             >
-              Get Lifetime Access - $19.99
+              Get the playbook — $19.99
             </TrackedCtaLink>
             <p className="mt-3 text-sm text-muted-foreground">
               For experienced Flutter engineers. <br className="hidden sm:block" />
@@ -75,26 +82,26 @@ export default function Home() {
       <section className="py-20 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold tracking-tight mb-4">This isn't another tutorial. It's a career move.</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-4">If you're a Flutter developer, you've probably felt this:</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              You already think like a senior engineer. You just need the native vocabulary and the confidence to prove it.
+              You don't need to start over. You need a different approach.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <ValueCard
               icon={<TrendingUp className="h-5 w-5 text-indigo-500" />}
-              title="Open New Doors"
-              description="Native roles at top companies are in high demand. Your Flutter skills translate directly — you just need the bridge to prove it."
+              title="Fewer job opportunities than native devs"
+              description="Great Flutter engineers get filtered out because companies still hire for native-first roles."
             />
             <ValueCard
               icon={<Briefcase className="h-5 w-5 text-green-500" />}
-              title="Walk In as a Senior"
-              description="No junior ramp-up. The architecture patterns, system design, and interview answers that prove you belong at the top."
+              title="Getting rejected in iOS/Android interviews"
+              description="You know how to build apps, but the Swift/Kotlin language barrier kills your signal."
             />
             <ValueCard
               icon={<Target className="h-5 w-5 text-purple-500" />}
-              title="Interview in Days, Not Months"
-              description="Real senior-level questions with answers that sound like 5 years of native experience. Because your Flutter years count."
+              title="Not knowing what to learn next"
+              description="You don't need everything. You need the right translation from Flutter to native."
             />
           </div>
         </div>
@@ -108,7 +115,7 @@ export default function Home() {
               One payment. Lifetime access. The ROI of a single salary bump pays for this 500x over.
             </p>
           </div>
-          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-stretch">
+          <div className="max-w-5xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             <PricingTeaser
               title="iOS Career Track"
               price="$19.99"
@@ -127,9 +134,8 @@ export default function Home() {
               href="/pricing#android"
               accent="green"
             />
-          </div>
-          <div className="max-w-3xl mx-auto mt-6">
             <PricingTeaser
+              className="md:col-span-2 md:mx-auto md:w-full md:max-w-xl lg:col-span-1 lg:max-w-none"
               title="Full Stack Native — iOS + Android"
               price="$29.99"
               compare="$99.99"
@@ -152,7 +158,7 @@ export default function Home() {
           <p className="text-muted-foreground text-center mb-10 max-w-xl mx-auto">Real engineers who used this playbook to transition — and never looked back.</p>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <TestimonialCard
-              quote="Landed a senior iOS role in 6 weeks. The architecture section alone made me sound like I'd been doing native for years."
+              quote="Landed a senior iOS role after a focused ramp-up. The architecture section alone made me sound like I'd been doing native for years."
               author="Alex M."
               role="Senior Flutter → iOS Engineer @ Fintech"
             />
@@ -174,7 +180,7 @@ export default function Home() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Your next career chapter starts here</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
-            Every week you wait is a week of native salary you're leaving on the table. Pick your track and start today.
+            The longer you wait, the more native salary you leave on the table. Pick your track and start today.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button className="bg-indigo-600 hover:bg-indigo-700" asChild>
@@ -204,11 +210,13 @@ const ACCENTS = {
     border: "border-indigo-500/20",
     iconBg: "bg-indigo-500/10",
     button: "bg-indigo-600 hover:bg-indigo-700",
+    badge: "bg-indigo-500/10 text-indigo-400",
   },
   green: {
     border: "border-green-500/20",
     iconBg: "bg-green-500/10",
     button: "bg-green-600 hover:bg-green-700",
+    badge: "bg-green-500/10 text-green-500",
   },
 };
 
@@ -245,27 +253,32 @@ function ValueCard({ icon, title, description }: { icon: React.ReactNode, title:
   );
 }
 
-function PricingTeaser({ title, price, compare, description, href, accent, badge }: { title: string, price: string, compare: string, description: string, href: string, accent: "indigo" | "green", badge?: string }) {
+function PricingTeaser({ title, price, compare, description, href, accent, badge, className }: { title: string, price: string, compare: string, description: string, href: string, accent: "indigo" | "green", badge?: string, className?: string }) {
   const styles = ACCENTS[accent];
+  const isBestValue = badge?.toLowerCase() === "best value";
+  const badgeClass = isBestValue
+    ? "bg-gradient-to-r from-indigo-500/30 via-indigo-400/20 to-indigo-500/30 text-indigo-200 ring-1 ring-indigo-400/50 shadow-[0_0_20px_rgba(99,102,241,0.35)]"
+    : styles.badge;
   return (
-    <a href={href} className={`rounded-2xl border ${styles.border} bg-card p-8 shadow-sm hover:shadow-md transition-shadow`}>
-      <div className="flex items-center justify-between mb-2">
+    <a
+      href={href}
+      className={`relative rounded-3xl border ${styles.border} bg-card/80 p-8 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all flex flex-col ${className ?? ""}`}
+    >
+      {badge && (
+        <span className={`absolute right-4 top-4 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full ${badgeClass}`}>
+          {badge}
+        </span>
+      )}
+      <div className="flex items-center justify-between mb-2 pr-20">
         <h3 className="text-xl font-bold">{title}</h3>
-        <div className="flex items-center gap-2">
-          {badge && (
-            <span className="text-xs font-bold uppercase tracking-wider bg-green-500/10 text-green-500 px-2 py-1 rounded-full">
-              {badge}
-            </span>
-          )}
-          <span className="text-xs uppercase tracking-wider text-muted-foreground">One‑time</span>
-        </div>
+        <span className="text-xs uppercase tracking-wider text-muted-foreground">One‑time</span>
       </div>
       <div className="flex items-baseline gap-2 mb-3">
         <span className="text-4xl font-bold">{price}</span>
         <span className="text-sm text-muted-foreground line-through">{compare}</span>
       </div>
       <p className="text-muted-foreground mb-6">{description}</p>
-      <Button className={styles.button}>
+      <Button className={`${styles.button} mt-auto`}>
         View Pricing <ArrowRight className="ml-2 h-4 w-4" />
       </Button>
     </a>

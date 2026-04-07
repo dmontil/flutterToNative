@@ -57,8 +57,11 @@ export function Navbar() {
     return (
         <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-background/80 backdrop-blur-md">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
-                <Link href="/" className="font-bold text-xl tracking-tighter flex items-center gap-1">
-                    Flutter<span className="text-primary">ToNative</span>.pro
+                <Link href="/" className="font-bold text-xl tracking-tighter flex items-center gap-2">
+                    <img src="/favicon.ico" alt="FlutterToNative" className="h-6 w-6" />
+                    <span>
+                        Flutter<span className="text-primary">ToNative</span>.pro
+                    </span>
                 </Link>
 
                 {/* Desktop Nav */}

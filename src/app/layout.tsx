@@ -59,6 +59,10 @@ export const metadata: Metadata = {
     creator: "@fluttertonative",
     site: "@fluttertonative",
   },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+  },
   verification: {
     // Add these when you set up Google Search Console, Bing, etc.
     // google: "your-google-verification-code",
